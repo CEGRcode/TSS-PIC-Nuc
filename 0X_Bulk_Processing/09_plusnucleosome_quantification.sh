@@ -4,7 +4,8 @@ source activate bioinfo
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-
+Reference=$WRK/X_Bulk_Processing/Reference
+BAMDIR=$WRK/data/BAM
 ###SCRIPT
 SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
 COMPOSITEFILTER=$WRK/bin/sum_Col_CDT_filter.pl
@@ -298,17 +299,8 @@ done
 cd $WRK/Library/F3g
 mkdir -p $WRK/Library/F3g/SCORES
 
-awk -v file="+1Nuc_" '{ if ( $8 ~ /YRWS/ && $7 > 0   )  { print $0 > ( file "YRWS.bed")
-     } else if ( $8 ~ /sameYR_lowWS/  && $7 > 0   ) { print $0 > ( file "sameYR_lowWS.bed")
-     } else if ( $8 ~ /sameYR_antiWS/ && $7 > 0 ) { print $0 > ( file "sameYR_antiWS.bed")
-     } else if ( $8 ~ /antiYR_antiWS/ && $7 > 0 ) { print $0 > ( file "antiYR_antiWS.bed")
-     } else if ( $8 ~ /antiYR_sameWS/ && $7 > 0 )  { print $0 > ( file "antiYR_sameWS.bed")
-     } else if ( $8 ~ /lessDNAencode/ && $7 > 0 )  { print $0 > ( file "lessDNAencode.bed")
-     } else if ($8 ~ /lowYR_sameWS/ && $7 > 0  )  { print $0 > ( file "lowYR_sameWS.bed")
-     }
-        }' $WRK/04_plusoneNucleosome/Adj+1Nuc_Di_TSS_all_phase.bed
 
-for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed   ; do
+for file in  $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed   ; do
         filename=$(basename "$file" ".bed")
         java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 300 $file -o ${filename}_300bp.bed
         java -jar $SCRIPTMANAGER read-analysis tag-pileup ${filename}_300bp.bed $BAMDIR/*_Pol2_*.bam --cpu 4 -5 -1  -M SCORES/Pol2_${filename}_read1
@@ -320,7 +312,7 @@ for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1
         rm SCORES/Pol2_${filename}_150_read1_sense.cdt SCORES/Pol2_${filename}_150_read1_anti.cdt  ${filename}_150bp.bed
 done
 
-for file in +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
     filename=$(basename "$file" .bed)
     tail -n +2 "SCORES/Pol2_${filename}_read1_sense.cdt" | \
     cut -f 78-227 | \
@@ -366,7 +358,7 @@ cat +1Nuc_YRWS_Pol2phasescore.txt +1Nuc_sameYR_lowWS_Pol2phasescore.txt +1Nuc_lo
 rm +1Nuc_YRWS_Pol2phasescore.txt +1Nuc_sameYR_lowWS_Pol2phasescore.txt +1Nuc_lowYR_sameWS_Pol2phasescore.txt +1Nuc_sameYR_antiWS_Pol2phasescore.txt +1Nuc_antiYR_sameWS_Pol2phasescore.txt +1Nuc_antiYR_antiWS_Pol2phasescore.txt +1Nuc_lessDNAencode_Pol2phasescore.txt
 
 
-for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in  $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
         filename=$(basename "$file" ".bed")
         java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 300 $file -o ${filename}_300bp.bed
         java -jar $SCRIPTMANAGER read-analysis tag-pileup ${filename}_300bp.bed $BAMDIR/BNase-seq_50U-10min_merge_hg38.bam --cpu 4 -5 -1  -M SCORES/BI_${filename}_read1
@@ -378,7 +370,7 @@ for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1
         rm SCORES/BI_${filename}_150_read1_sense.cdt SCORES/BI_${filename}_150_read1_anti.cdt  ${filename}_150bp.bed
 done
 
-for file in +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
     filename=$(basename "$file" .bed)
     tail -n +2 "SCORES/BI_${filename}_read1_sense.cdt" | \
     cut -f 78-227 | \
@@ -414,21 +406,10 @@ done
 cat +1Nuc_YRWS_BIphasescore.txt +1Nuc_sameYR_lowWS_BIphasescore.txt +1Nuc_lowYR_sameWS_BIphasescore.txt +1Nuc_sameYR_antiWS_BIphasescore.txt +1Nuc_antiYR_sameWS_BIphasescore.txt +1Nuc_antiYR_antiWS_BIphasescore.txt +1Nuc_lessDNAencode_BIphasescore.txt >  BIphasescore.txt
 rm +1Nuc_YRWS_BIphasescore.txt +1Nuc_sameYR_lowWS_BIphasescore.txt +1Nuc_lowYR_sameWS_BIphasescore.txt +1Nuc_sameYR_antiWS_BIphasescore.txt +1Nuc_antiYR_sameWS_BIphasescore.txt +1Nuc_antiYR_antiWS_BIphasescore.txt +1Nuc_lessDNAencode_BIphasescore.txt
 
-rm +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed
-
 cd $WRK/Library/F3e
 mkdir -p $WRK/Library/F3e/SCORES
-awk -v file="+1Nuc_" '{ if ( $8 ~ /YRWS/ && $7 > 0   )  { print $0 > ( file "YRWS.bed")
-     } else if ( $8 ~ /sameYR_lowWS/  && $7 > 0   ) { print $0 > ( file "sameYR_lowWS.bed")
-     } else if ( $8 ~ /sameYR_antiWS/ && $7 > 0 ) { print $0 > ( file "sameYR_antiWS.bed")
-     } else if ( $8 ~ /antiYR_antiWS/ && $7 > 0 ) { print $0 > ( file "antiYR_antiWS.bed")
-     } else if ( $8 ~ /antiYR_sameWS/ && $7 > 0 )  { print $0 > ( file "antiYR_sameWS.bed")
-     } else if ( $8 ~ /lessDNAencode/ && $7 > 0 )  { print $0 > ( file "lessDNAencode.bed")
-     } else if ($8 ~ /lowYR_sameWS/ && $7 > 0  )  { print $0 > ( file "lowYR_sameWS.bed")
-     }
-        }' $WRK/04_plusoneNucleosome/Adj+1Nuc_Di_TSS_all_phase.bed
 
-for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in  $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed ; do
         filename=$(basename "$file" ".bed")
         java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 300 $file -o ${filename}_300bp.bed
         java -jar $SCRIPTMANAGER read-analysis tag-pileup ${filename}_300bp.bed $BAMDIR/BNase-seq_50U-10min_merge_hg38.bam --cpu 4 -5 -1  -M SCORES/BI_${filename}_read1
@@ -440,7 +421,7 @@ for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1
         rm SCORES/BI_${filename}_150_read1_sense.cdt SCORES/BI_${filename}_150_read1_anti.cdt  ${filename}_150bp.bed
 done
 
-for file in +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
     filename=$(basename "$file" .bed)
     tail -n +2 "SCORES/BI_${filename}_read1_sense.cdt" | \
     cut -f 78-227 | \
@@ -478,7 +459,7 @@ rm +1Nuc_YRWS_BIphasescore.txt +1Nuc_sameYR_lowWS_BIphasescore.txt +1Nuc_lowYR_s
 
 ## salt
 
-for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
         filename=$(basename "$file" ".bed")
         java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 300 $file -o ${filename}_300bp.bed
         java -jar $SCRIPTMANAGER read-analysis tag-pileup ${filename}_300bp.bed $BAMDIR/K562_Input_Native100BI_rep1_hg38.bam --cpu 4 -5 -1  -M SCORES/100Sup_${filename}_read1
@@ -525,7 +506,7 @@ done
 cat +1Nuc_YRWS_100Supphasescore.txt +1Nuc_sameYR_lowWS_100Supphasescore.txt +1Nuc_lowYR_sameWS_100Supphasescore.txt +1Nuc_sameYR_antiWS_100Supphasescore.txt +1Nuc_antiYR_sameWS_100Supphasescore.txt +1Nuc_antiYR_antiWS_100Supphasescore.txt +1Nuc_lessDNAencode_100Supphasescore.txt >  100Supphasescore.txt
 rm +1Nuc_YRWS_100Supphasescore.txt +1Nuc_sameYR_lowWS_100Supphasescore.txt +1Nuc_lowYR_sameWS_100Supphasescore.txt +1Nuc_sameYR_antiWS_100Supphasescore.txt +1Nuc_antiYR_sameWS_100Supphasescore.txt +1Nuc_antiYR_antiWS_100Supphasescore.txt +1Nuc_lessDNAencode_100Supphasescore.txt
 
-for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in  $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
         filename=$(basename "$file" ".bed")
         java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 300 $file -o ${filename}_300bp.bed
         java -jar $SCRIPTMANAGER read-analysis tag-pileup ${filename}_300bp.bed $BAMDIR/K562_Input_Native1000BI_rep1_hg38.bam    --cpu 4 -5 -1  -M SCORES/1000Sup_${filename}_read1
@@ -538,7 +519,7 @@ for file in  +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1
 done
 
 
-for file in +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed ; do
+for file in $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed  ; do
     filename=$(basename "$file" .bed)
     tail -n +2 "SCORES/1000Sup_${filename}_read1_sense.cdt" | \
     cut -f 78-227 | \
@@ -573,8 +554,6 @@ done
 
 cat +1Nuc_YRWS_1000Sup-phasescore.txt +1Nuc_sameYR_lowWS_1000Sup-phasescore.txt +1Nuc_lowYR_sameWS_1000Sup-phasescore.txt +1Nuc_sameYR_antiWS_1000Sup-phasescore.txt +1Nuc_antiYR_sameWS_1000Sup-phasescore.txt +1Nuc_antiYR_antiWS_1000Sup-phasescore.txt +1Nuc_lessDNAencode_1000Sup-phasescore.txt >  1000Sup-phasescore.txt
 rm +1Nuc_YRWS_1000Sup-phasescore.txt +1Nuc_sameYR_lowWS_1000Sup-phasescore.txt +1Nuc_lowYR_sameWS_1000Sup-phasescore.txt +1Nuc_sameYR_antiWS_1000Sup-phasescore.txt +1Nuc_antiYR_sameWS_1000Sup-phasescore.txt +1Nuc_antiYR_antiWS_1000Sup-phasescore.txt +1Nuc_lessDNAencode_1000Sup-phasescore.txt
-
-rm +1Nuc_antiYR_sameWS.bed  +1Nuc_lessDNAencode.bed  +1Nuc_YRWS.bed +1Nuc_sameYR_lowWS.bed  +1Nuc_lowYR_sameWS.bed +1Nuc_antiYR_antiWS.bed +1Nuc_sameYR_antiWS.bed
 
 
 

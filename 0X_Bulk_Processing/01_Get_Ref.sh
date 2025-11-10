@@ -64,6 +64,44 @@ done
 
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 250 $WRK/04_plusoneNucleosome/Adj+1Nuc_TSS_all.bed -o $Reference/Adj+1Nuc_TSS_all_250bp.bed
 
+
+awk -v file="+1Nuc_" '{ if ($8 ~ /YRWS/ && $7 > 0 ) { print $0 > ( file "YRWS.bed")
+     } else if ($8 ~ /sameYR_lowWS/ && $7 > 0 ) { print $0 > ( file "sameYR_lowWS.bed")
+     } else if ($8 ~ /sameYR_antiWS/ && $7 > 0 ) { print $0 > ( file "sameYR_antiWS.bed")
+     } else if ($8 ~ /antiYR_antiWS/ && $7 > 0 ) { print $0 > ( file "antiYR_antiWS.bed")
+     } else if ($8 ~ /antiYR_sameWS/ && $7 > 0 ) { print $0 > ( file "antiYR_sameWS.bed")
+     } else if ($8 ~ /lessDNAencode/ && $7 > 0 ) { print $0 > ( file "lessDNAencode.bed")
+     } else if ($8 ~ /lowYR_sameWS/ && $7 > 0 ) { print $0 > ( file "lowYR_sameWS.bed")
+     }
+        }' $WRK/04_plusoneNucleosome/Adj+1Nuc_Di_TSS_all_phase.bed
+
+mv +1Nuc_*.bed $Reference/
+
+
+awk -v file="+1Nuc_" '{ if ( $8 ~ /YRWS/  && $13> 0 && $12> 0 && $11> 0 && $10> 0 && $21 !~ /Divergent/  && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160    )  { print $0 > ( file "YRWS.bed")
+     } else if ( $8 ~ /sameYR_lowWS/  && $11> 0 && $10> 0 && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160  ) { print $0 > ( file "sameYR_lowWS.bed")
+     } else if ( $8 ~ /sameYR_antiWS/ && $13< 0 && $12< 0 && $11> 0 && $10> 0 && $21 !~ /Divergent/  && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160   ) { print $0 > ( file "sameYR_antiWS.bed")
+     } else if ( $8 ~ /antiYR_antiWS/ && $13< 0 && $12< 0 && $11< 0 && $10< 0 && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160  ) { print $0 > ( file "antiYR_antiWS.bed")
+     } else if ( $8 ~ /antiYR_sameWS/ && $13> 0 && $12> 0 && $11< 0 && $10< 0 && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160   )  { print $0 > ( file "antiYR_sameWS.bed")
+     } else if ( $8 ~ /lessDNAencode/ && $13 == "0" && $12 == "0"  && $11 == "0" && $10 == "0" && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/  && $7 > 0 && $5 >=50 && $5 <=160  )  { print $0 > ( file "lessDNAencode.bed")
+     } else if ($8 ~ /lowYR_sameWS/ && $12> 0 && $13> 0 && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/  && $7 > 0 && $5 >=50 && $5 <=160  )  { print $0 > ( file "lowYR_sameWS.bed")
+     }
+        }' $WRK/04_plusoneNucleosome/Adj+1Nuc_Di_TSS_all_phase.bed
+
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_YRWS.bed   >  $Reference/TSS_+1Nuc_YRWS.bed
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_sameYR_lowWS.bed  > $Reference/TSS_+1Nuc_sameYR_lowWS.bed
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_sameYR_antiWS.bed   > $Reference/TSS_+1Nuc_sameYR_antiWS.bed
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_antiYR_antiWS.bed   > $Reference/TSS_+1Nuc_antiYR_antiWS.bed
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_antiYR_sameWS.bed   > $Reference/TSS_+1Nuc_antiYR_sameWS.bed
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_lessDNAencode.bed  > $Reference/TSS_+1Nuc_lessDNAencode.bed
+awk '{OFS="\t"; print $14,$15,$16,$17,$18,$19}' +1Nuc_lowYR_sameWS.bed   > $Reference/TSS_+1Nuc_lowYR_sameWS.bed
+cat TSS_+1Nuc_YRWS.bed TSS_+1Nuc_sameYR_lowWS.bed TSS_+1Nuc_sameYR_antiWS.bed TSS_+1Nuc_antiYR_antiWS.bed TSS_+1Nuc_antiYR_sameWS.bed TSS_+1Nuc_lessDNAencode.bed TSS_+1Nuc_lowYR_sameWS.bed > $Reference/TSS_+1Nuc_all.bed
+
+rm +1Nuc_*.bed
+
+cp $WRK/04_plusoneNucleosome/TSS_all_phase_adj+1Nuc_Di.bed $Reference/
+cp $WRK/05_Call_Motifs/WDR5/TSS_same_WDR5_M1.bed $Reference/
+
 for file in  $WRK/04_plusoneNucleosome/adj+1Nuc_allphase_TSS.bed ; do
     filename=$(basename "$file" ".bed")
     bedtools shift -i $file -g $Genome -p -100 -m 100 > $Reference/${filename}_up100.bed

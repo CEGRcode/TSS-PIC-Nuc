@@ -136,6 +136,7 @@ java -jar $PICARD MergeSamFiles -I 36557_IgG_i5006_K562_-_IMDM_DMSO_BX_hg38.bam 
                                 -I 33821_IgG_i5006_K562_-_-_DMSO_BX_hg38.bam \
                                 -I 33853_IgG_i5006_K562_-_-_DMSO_BX_hg38.bam  \
                                 -O DMSOK562_IgG_BX_merge_hg38.bam
+                                
 cp 40520_GTF2A1_HPA000869_K562_-_IMDM_Triptolide_BX_hg38.bam TriptolideK562_GTF2A1_BX_rep1_hg38.bam
 cp 40522_GTF2A1_HPA000869_K562_-_IMDM_DMSO_BX_hg38.bam DMSOK562_GTF2A1_BX_rep1_hg38.bam
 cp 33780_TBP_hTBP_K562_-_-_Triptolide_BX_hg38.bam    TriptolideK562_TBP_BX_rep1_hg38.bam      
@@ -148,8 +149,7 @@ java -jar $PICARD MergeSamFiles -I 35295_TFIIB_HPA061626_K562_-_-_Triptolide_BX_
 
 java -jar $PICARD MergeSamFiles -I 35297_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.bam      \
                                 -I 33999_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.bam    \
-                                -O DMSOeK562_TFIIB_BX_rep1_hg38.bam
-
+                                -O DMSOK562_TFIIB_BX_rep1_hg38.bam
 # ChIP-exo rep2
 ## GTF2A2 and GTF2A1 both are subunits of TFIIA
 cp 33903_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam  K562_GTF2A2_BX_rep1_hg38.bam
@@ -202,6 +202,7 @@ cp 34617_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam K562_GTF2B_BX_rep2_hg38.bam
 
 ## will add TAF1 TAF3 NFYC replicate 2
 #cp 34531_NFYC_NFYC-1A11_K562_-_IMDM_-_BX_hg38.bam K562_NFYC_BX_rep2_hg38.bam
+
 java -jar $PICARD MergeSamFiles -I 33993_PolII_ab76123_K562_-_-_Triptolide_BX_hg38.bam \
                                 -I 35291_PolII_ab76123_K562_-_-_Triptolide_BX_hg38.bam \
                                 -O TriptolideK562_PolII_BX_rep2_hg38.bam
@@ -217,7 +218,7 @@ java -jar $PICARD MergeSamFiles -I 36545_TFIIB_HPA061626_K562_-_IMDM_Triptolide_
 
 java -jar $PICARD MergeSamFiles -I 36547_TFIIB_HPA061626_K562_-_IMDM_DMSO_BX_hg38.bam      \
                                 -I 33809_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.bam               \
-                                -O DMSOeK562_TFIIB_BX_rep2_hg38.bam
+                                -O DMSOK562_TFIIB_BX_rep2_hg38.bam
 
 
 cd $WRK/../data
