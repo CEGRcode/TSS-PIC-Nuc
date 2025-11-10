@@ -1,0 +1,13 @@
+Reference/FixedTATA_TSS_same_1000bp.bed	E4
+Reference/FixedTATA_TSS_oppo_1000bp.bed	E4
+Reference/YRWS_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+Reference/antiYRantiWS_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+Reference/antiYRsameWS_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+Reference/lessDNAencode_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+]Reference/lowYRsameWS_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+Reference/sameYRantiWS_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+Reference/sameYRlowWS_Adj+1Nuc_TSS_1000bp.bed	F3d;E8
+Reference/WDR5_M1_same_TSS_1000bp.bed		E13b
+Reference/SP1_Occupancy_1000bp.bed		E18d
+Reference/GABPA_Occupancy_1000bp.bed	        E18d
+Reference/NFYC_Occupancy_1000bp.bed	        E18d

@@ -1,0 +1,23 @@
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/YRWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/antiYRantiWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/antiYRsameWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/lessDNAencode_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/lowYRsameWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/sameYRantiWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/sameYRlowWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	NaN	../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/nophase_ajusted_+1Nuc_Di_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/YRWS_Adj+1Nuc_TSS_1000bp.bed		E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/antiYRantiWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/antiYRsameWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/lessDNAencode_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/lowYRsameWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/sameYRantiWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native100BI_rep1_hg38.bam	Reference/sameYRlowWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/YRWS_Adj+1Nuc_TSS_1000bp.bed		E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/antiYRantiWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/antiYRsameWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/lessDNAencode_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/lowYRsameWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/sameYRantiWS_Adj+1Nuc_TSS_1000bp.bed	E9
+100	NaN	5	TotalTag	../data/BAM/K562_Input_Native1000BI_rep1_hg38.bam	Reference/sameYRlowWS_Adj+1Nuc_TSS_1000bp.bed	E9
+
