@@ -46,16 +46,18 @@ STRAIN=`basename $BAMFILE ".bam" | cut -d "_" -f 1`
 Target=`basename $BAMFILE ".bam" | cut -d "_" -f 2`
 ASSAY=`basename $BAMFILE ".bam" | cut -d "_" -f 3`
 
-if [ "$ASSAY" ~ /BI/ ]; then
-    echo "Total tag normalization"
-    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_total"
+$BAMDIR/ENCFF112MXH_Grocap_hg38.bam
+$BAMDIR/U2OS_YY1KD_scRNA_rep1_hg38.bam
 
-elif [ "$ASSAY" == "BX" ]; then
+if  [ "$ASSAY" == "BX" ]; then
     echo "Calculate classic TF NCIS normalization factors w/ blacklist"
     java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f "$BLACKLIST" --ncis -c "$BAMDIR/${STRAIN}_IgG_*_hg38.bam" -w 500 -o "$NDIR/${BAMFILENAME}_NCISb"
+elif [ "$ASSAY" ~ /BI/ ]; then
+    echo "Total tag normalization"
+    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_total"
+else 
+    echo "Total tag normalization"
+    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_total"
 fi
-
-echo "Calculating fragment size distribution"
-java -jar "$SCRIPTMANAGER" bam-statistics pe-stat -x 500 -s "$BAMFILE" -o "$FDIR/$BAMFILENAME"
 
 rm -f "$SCRIPTMANAGER"

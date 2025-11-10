@@ -87,3 +87,9 @@ rm SRR18485977_*.bam SRR18486002_*.bam
 rm *.out
 rm *.tab
 
+for FILE in BAM/U2OS_*.bam;
+do
+  [ -f $FILE.bai ] || samtools index $FILE
+done
+
+

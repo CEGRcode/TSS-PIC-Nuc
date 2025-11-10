@@ -16,7 +16,6 @@ COMPOSITEFILTER=$WRK/bin/sum_Col_CDT_filter.pl
 [ -d $WRK/Library/E8 ] || mkdir -p $WRK/Library/E8
 [ -d $WRK/Library/F3e ] || mkdir -p $WRK/Library/F3e
 [ -d $WRK/Library/F3g ] || mkdir -p $WRK/Library/F3g
-[ -d $WRK/Library/F3f ] || mkdir -p $WRK/Library/F3f
 
 BAMDIR=$WRK/data/BAM
 cd $WRK/Library/E6

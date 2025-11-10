@@ -15,10 +15,9 @@ cd $WRK/../data/sample-BAM
 [ -d ../BAM ] || mkdir ../BAM
 
 
-# Dowload IgG from GEO GSE267711
-# Download Benzonase-seq and H3K4me3 ChIP-seq data from GSE266547
-# Download CoPRO data from ENCODE
-# Download GRO-cap data from ENCODE
+# Dowload K562_IgG_BX_merge_hg38.bam from GEO GSE267711 
+# Dowload K562_FOXA1_BX_merge_hg38.bam from GEO GSE267711
+# Download Benzonase-seq BNase-seq_50U-10min_merge_hg38.bam and H3K4me3 ChIP-seq BNase-ChIP_H3K4me3_merge_hg38.bam from GSE266547
 
 # Use Picard to merge resequenced technical replicates, otherwise rename BAM using cp
 
@@ -36,8 +35,6 @@ java -jar $PICARD MergeSamFiles -I 32064_EP300_HPA003128_K562_-_-_-_BX_hg38.bam 
                                 -O K562_EP300_BX_rep1_hg38.bam
 java -jar $PICARD MergeSamFiles -I 33907_ERCC3_HPA046077_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 34076_ERCC3_HPA046077_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34775_ERCC3_HPA046077_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34814_ERCC3_HPA046077_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_ERCC3_BX_rep1_hg38.bam
 
 java -jar $PICARD MergeSamFiles -I 32065_GABPA_HPA003258_K562_-_-_-_BX_hg38.bam \
@@ -46,37 +43,16 @@ java -jar $PICARD MergeSamFiles -I 32065_GABPA_HPA003258_K562_-_-_-_BX_hg38.bam 
 
 java -jar $PICARD MergeSamFiles -I 33902_GTF2A1_HPA000869_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 34072_GTF2A1_HPA000869_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34772_GTF2A1_HPA000869_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34811_GTF2A1_HPA000869_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_GTF2A1_BX_rep1_hg38.bam
-
-java -jar $PICARD MergeSamFiles -I 33903_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34773_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34812_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam \
-                                -O K562_GTF2A2_BX_rep1_hg38.bam
-
 
 java -jar $PICARD MergeSamFiles -I 32066_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam \
                                 -I 32115_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam \
                                 -O K562_GTF2B_BX_rep1_hg38.bam
 
-java -jar $PICARD MergeSamFiles -I 33905_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34074_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34774_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34813_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
-                                -O K562_GTF2H1_BX_rep1_hg38.bam
-
 
 java -jar $PICARD MergeSamFiles -I 33941_NELFA_HPA043931_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 34202_NELFA_HPA043931_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34783_NELFA_HPA043931_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_NELFA_BX_rep1_hg38.bam
-
-java -jar $PICARD MergeSamFiles -I 33942_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34203_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34784_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34823_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
-                                -O K562_NELFE_BX_rep1_hg38.bam
 
 java -jar $PICARD MergeSamFiles -I 35656_NFYC_HPA055011_K562_-_-_-_BX_hg38.bam \
                                 -I 34364_NFYC_HPA055011_K562_-_IMDM_-_BX_hg38.bam \
@@ -128,18 +104,27 @@ java -jar $PICARD MergeSamFiles -I 41943_Input_-_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_Input_Native1000BI_rep1_hg38.bam 
 
 # ChIP-exo rep2
+## GTF2A2 and GTF2A1 both are subunits of TFIIA
+cp 33903_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam  K562_GTF2A2_BX_rep1_hg38.bam
+cp 34499_GTF2A1_Antibody-1F2_K562_-_IMDM_-_BX_hg38.bam K562_GTF2A1_BX_rep2_hg38.bam
+
+ ## ERCC3 and GTF2H1 are components of the TFIIH complex                      
+java -jar $PICARD MergeSamFiles -I 33905_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
+                                -I 34074_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
+                                -O K562_GTF2H1_BX_rep1_hg38.bam
+cp 34504_GTF2H1_Antibody-1A10_K562_-_-_-_BX_hg38.bam K562_GTF2H1_BX_rep2_hg38.bam
+ ## NELFA and NELFB NELFE NELF are components of the NELF complex    
+java -jar $PICARD MergeSamFiles -I 33942_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
+                                -I 34203_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
+                                -O K562_NELFE_BX_rep1_hg38.bam
 
 cp 34928_E2F7_A303-037A_K562_-_IMDM_-_BX_hg38.bam K562_E2F7_BX_rep2_hg38.bam
 cp 34607_GABPA_HPA003258_K562_-_-_-_BX_hg38.bam K562_GABPA_BX_rep2_hg38.bam
-cp 34499_GTF2A1_Antibody-1F2_K562_-_IMDM_-_BX_hg38.bam K562_GTF2A1_BX_rep2_hg38.bam
 cp 34617_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam K562_GTF2B_BX_rep2_hg38.bam
 
 java -jar $PICARD MergeSamFiles -I 35104_EP300_A300-358A_K562_-_-_-_BX_hg38.bam \
                                 -I 34959_EP300_A300-358A_K562_-_-_-_BX_hg38.bam \
                                 -O K562_EP300_BX_rep2_hg38.bam
-
-cp 34504_GTF2H1_Antibody-1A10_K562_-_-_-_BX_hg38.bam K562_GTF2H1_BX_rep2_hg38.bam
-cp 34531_NFYC_NFYC-1A11_K562_-_IMDM_-_BX_hg38.bam K562_NFYC_BX_rep2_hg38.bam
 cp 34599_NRF1_3H1-s_K562_-_-_-_BX_hg38.bam K562_NRF1_BX_rep2_hg38.bam
 cp 32869_PolII_ab76123_K562_-_IMDM_-_BX_hg38.bam  K562_PolII_BX_rep2_hg38.bam
 cp 34600_RBBP5_A300-109A_K562_-_-_-_BX_hg38.bam K562_RBBP5_BX_rep2_hg38.bam
@@ -150,6 +135,9 @@ cp 34606_WDR5_HPA047182_K562_-_IMDM_-_BX_hg38.bam K562_WDR5_BX_rep2_hg38.bam
 cp 32097_YY1_1B2_K562_-_-_-_BX_hg38.bam K562_YY1_BX_rep2_hg38.bam
 cp 32245_ZFP91_A303-245A_K562_-_IMDM_-_BX_hg38.bam K562_ZFP91_BX_rep2_hg38.bam
 cp 30748_GATA1_HPA000232_K562_-_IMDM_-_BX_hg38.bam K562_GATA1_BX_rep2_hg38.bam
+
+
+#cp 34531_NFYC_NFYC-1A11_K562_-_IMDM_-_BX_hg38.bam K562_NFYC_BX_rep2_hg38.bam
 
 
 
