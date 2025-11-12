@@ -12,12 +12,12 @@
 ### CHANGE ME
 
 WRK=/Path/to/Title/
-CALL_RefPT=$WRK/05_Call_Motifs/
+CALL_RefPT=$WRK/05_Call_RefPT/
 TEMP=$CALL_RefPT/temp_Filter_and_Sort_by_occupancy
 WebLogos=$CALL_RefPT/WebLogos
 BAMDIR=$WRK/data/BAM
 
-[ -d $WebLogo ] || mkdir $WebLogo
+[ -d $WebLogos ] || mkdir $WebLogos
 [ -d $TEMP ] || mkdir $TEMP
 
 cd $CALL_RefPT
@@ -33,10 +33,10 @@ source activate meme
 
 
 # Inputs and outputs
-GENOME=$WRK/hg38_files/hg38.fa
+GENOME=$WRK/data/hg38_files/hg38.fa
 Genome=$WRK/data/hg38_files/hg38.info.txt
-blacklist=$WRK/hg38_files/hg38-blacklist.bed
-background=$WRK/hg38_files/human_background_model.txt
+blacklist=$WRK/data/hg38_files/hg38-blacklist.bed
+background=$WRK/data/hg38_files/human_background_model.txt
 EXCLUSION=100
 
 ORIGINAL_SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar

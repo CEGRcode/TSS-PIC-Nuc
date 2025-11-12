@@ -293,12 +293,12 @@ done
 for file in NFYC_Occupancy_1bp.bed  SP1_Occupancy_1bp.bed GABPA_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
     bedtools sort -i ${TF}/TSS_same_${TF}_M1_TATA.bed > TSS_same_${TF}_M1_TATA_sort.bed
-    bedtools intersect -u -a ../Nuc1/TSS_all_phase_adj+1Nuc_Di.bed -b  TSS_same_${TF}_M1_TATA_sort.bed | \
+    bedtools intersect -u -a ../04_plusoneNucleosome/TSS_all_phase_adj+1Nuc_Di.bed -b  TSS_same_${TF}_M1_TATA_sort.bed | \
     awk '{OFS="\t"} { print $17,$18,$19,$20,$21,$22,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16}' > ${TF}/TATA_TSS_same_${TF}_M1_sort.bed
     awk '{OFS="\t"} { print $23,$24,$25,$26,$27,$28,$29,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$30}' TSS_same_${TF}_M1_TATA_sort.bed > ${TF}/${TF}_M1_TSS_same_TATA_sort.bed
     rm TSS_same_${TF}_M1_TATA_sort.bed
     bedtools sort -i ${TF}/TSS_same_${TF}_M1_noTATA.bed > TSS_same_${TF}_M1_noTATA_sort.bed
-    bedtools intersect -u -a ../Nuc1/TSS_all_phase_adj+1Nuc_Di.bed -b  TSS_same_${TF}_M1_noTATA_sort.bed | \
+    bedtools intersect -u -a ../04_plusoneNucleosome/TSS_all_phase_adj+1Nuc_Di.bed -b  TSS_same_${TF}_M1_noTATA_sort.bed | \
     awk '{OFS="\t"} { print $17,$18,$19,$20,$21,$22,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16}' > ${TF}/noTATA_TSS_same_${TF}_M1_sort.bed
     awk '{OFS="\t"} { print $23,$24,$25,$26,$27,$28,$29,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$30}' TSS_same_${TF}_M1_noTATA_sort.bed > ${TF}/${TF}_M1_TSS_same_noTATA_sort.bed
     rm TSS_same_${TF}_M1_noTATA_sort.bed
@@ -372,33 +372,4 @@ awk '{
         print $0 > "YY1_M1_TSS_same_3.bed";
     }
 }' ${TF}_M1_TSS_same_overlap.bed 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

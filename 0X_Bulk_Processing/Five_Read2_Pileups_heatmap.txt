@@ -1,5 +1,5 @@
 NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/TSS_4color_up1_6bp.bed 			F1b 
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		$Reference/TATA_TSS-strand_tsssort_down20bp_60bp.bed	F1c
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/TATA_TSS-strand_tsssort_down20bp_60bp.bed	F1c
 NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bamm   	Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 		F2a
 NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam 		Reference/adj+1Nuc_allphase_TSS_up100_120bp.bed		F4d
 NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam 		Reference/nearestTSS_YY1_M1_same-oppo_500bp.bed		F5a

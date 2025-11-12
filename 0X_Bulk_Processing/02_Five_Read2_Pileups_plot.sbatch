@@ -9,7 +9,7 @@
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-METADATA=$WRK/X_Bulk_Processing/Five_Read2_Pileups_plot.txt
+METADATA=$WRK/0X_Bulk_Processing/Five_Read2_Pileups_plot.txt
 THREADS=4
 ###
 
@@ -33,7 +33,7 @@ cp $ORIGINAL_SCRIPTMANAGER $SCRIPTMANAGER
 # Set up output directories
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-cd $WRK/X_Bulk_Processing
+cd $WRK/0X_Bulk_Processing
 # Determine insert filters for the current job array index
 MIN=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $1}'`
 MAX=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $2}'`
@@ -72,14 +72,14 @@ FILTER=""
 # Parse normalization params and get scaling factor
 FACTOR=1
 if [ "$NORMALIZATION" == "NCIS" ]; then
-    NFFILE=$BAMDIR/NormalizationFactors/${BAM}_NCISb_ScalingFactors.out
+    NFFILE=$WRK/data/NormalizationFactors/${BAM}_NCISb_ScalingFactors.out
     if [[ ! -f $NFFILE ]]; then
         echo "ERROR: Missing Normalization factor file (NCIS): $NFFILE"
         exit 1
     fi
     FACTOR=`grep 'Scaling factor' $NFFILE | awk -F" " '{print $3}'`
 elif [ "$NORMALIZATION" == "TotalTag" ]; then
-    NFFILE=$BAMDIR/NormalizationFactors/${BAM}_TotalTag_ScalingFactors.out
+    NFFILE=$WRK/data/NormalizationFactors/${BAM}_TotalTag_ScalingFactors.out
     if [[ ! -f $NFFILE ]]; then
         echo "ERROR: Missing Normalization factor file (TotalTag): $NFFILE"
         exit 1

@@ -10,11 +10,11 @@ WRK=/Path/to/Title/
 
 # Inputs and outputs
 MDIR=$WRK/data/sample-MEME
-Call_Motifs=$WRK/05_Call_Motifs/
-PWM=$WRK/05_Call_Motifs/PWM
+CALL_RefPT=$WRK/05_Call_RefPT/
+PWM=$WRK/05_Call_RefPT/PWM
 
 # Create output directories if they don't exist
-[ -d $Call_Motifs ] || mkdir $Call_Motifs
+[ -d $CALL_RefPT ] || mkdir $CALL_RefPT
 [ -d $PWM ] || mkdir $PWM
 
 # Hardcode move of MEME files from PEGR workflow to raname as TF.meme.txt file

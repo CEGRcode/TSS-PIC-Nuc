@@ -51,13 +51,13 @@ $BAMDIR/U2OS_YY1KD_scRNA_rep1_hg38.bam
 
 if  [ "$ASSAY" == "BX" ]; then
     echo "Calculate classic TF NCIS normalization factors w/ blacklist"
-    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f "$BLACKLIST" --ncis -c "$BAMDIR/${STRAIN}_IgG_*_hg38.bam" -w 500 -o "$NDIR/${BAMFILENAME}_NCISb"
+    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f "$BLACKLIST" --ncis -c $BAMDIR/${STRAIN}_IgG_*_hg38.bam -w 500 -o "$NDIR/${BAMFILENAME}_NCISb"
 elif [ "$ASSAY" ~ /BI/ ]; then
     echo "Total tag normalization"
-    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_total"
+    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_TotalTag"
 else 
     echo "Total tag normalization"
-    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_total"
+    java -jar "$SCRIPTMANAGER" read-analysis scaling-factor "$BAMFILE" -f $BLACKLIST -t -o "$NDIR/${BAMFILENAME}_TotalTag"
 fi
 
 rm -f "$SCRIPTMANAGER"
