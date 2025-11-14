@@ -1,7 +1,7 @@
 
 module load anaconda3
 source activate bioinfo
-# Script for F1c 
+
 
 ### CHANGE ME
 WRK=/Path/to/Title/

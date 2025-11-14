@@ -2,26 +2,26 @@
 
 # Organize select MEME reference files for RefPT building into the PWM directory
 module load anaconda3
-source activate meme
+source activate bioinfo
 
 ### CHANGE ME
 WRK=/Path/to/Title/
 SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
 GENOME=$WRK/data/hg38_files/hg38.fa
-Genome=$WRK/data/hg38_files/hg38.info.text
+Genome=$WRK/data/hg38_files/hg38.info.txt
 ###
 
 # outputs
 Reference=$WRK/0X_Bulk_Processing/Reference
 # Create output directories if they don't exist
 [ -d $Reference ] || mkdir $Reference
-
-bedtools shift -i $WRK/02_TSS_NFR/TSS_4color.bed -g $Genome -p -1 -m 1 > $Reference/TSS_4color_up1.bed
+cat $WRK/02_TSS_NFR/Inr_group/TSS_CA_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_TA_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_GA_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_AA_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_CG_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_TG_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_GG_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_AG_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_CC_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_TC_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_GC_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_AC_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_CT_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_TT_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_GT_all.bed $WRK/02_TSS_NFR/Inr_group/TSS_AT_all.bed > $Reference/TSS_4color.bed
+bedtools shift -i $Reference/TSS_4color.bed -g $Genome -p -1 -m 1 > $Reference/TSS_4color_up1.bed
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 6  $Reference/TSS_4color_up1.bed -o $Reference/TSS_4color_up1_6bp.bed
-rm $Reference/TSS_4color_up1.bed
+rm $Reference/TSS_4color_up1.bed $Reference/TSS_4color.bed
 
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 500 $WRK/02_TSS_NFR/nonInr.bed -o $Reference/nonInr_500bp.bed
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 500 $WRK/02_TSS_NFR/Inr.bed -o $Reference/Inr_500bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 500 $WRK/02_TSS_NFR/Inr_group/nonInr.bed -o $Reference/nonInr_500bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 500 $WRK/02_TSS_NFR/Inr_group/Inr.bed -o $Reference/Inr_500bp.bed
 
 for BEDFILE in $WRK/02_TSS_NFR/Inr_group/TSS_*_all.bed ; do
 	BED=$(basename "$BEDFILE" ".bed")
@@ -39,8 +39,7 @@ rm $Reference/TATA_TSS-strand_tsssort_down20bp.bed
 
 for file in $WRK/03_core-promoter/TATA_TSS_*_same_*_5prime.bed  ; do
   filename=$(basename "$file" ".bed")
-  java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 100 ${filename}.bed -o $Reference/${filename}_100bp.bed
-  rm ${filename}_down30.bed
+  java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 100 $file -o $Reference/${filename}_100bp.bed
 done
 
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 200 $WRK/03_core-promoter/TSS_TATAsame_oppo_noTATA.bed -o $Reference/TSS_TATAsame_oppo_noTATA_200bp.bed
@@ -64,20 +63,6 @@ done
 
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 250 $WRK/04_plusoneNucleosome/Adj+1Nuc_TSS_all.bed -o $Reference/Adj+1Nuc_TSS_all_250bp.bed
 
-
-awk -v file="+1Nuc_" '{ if ($8 ~ /YRWS/ && $7 > 0 ) { print $0 > ( file "YRWS.bed")
-     } else if ($8 ~ /sameYR_lowWS/ && $7 > 0 ) { print $0 > ( file "sameYR_lowWS.bed")
-     } else if ($8 ~ /sameYR_antiWS/ && $7 > 0 ) { print $0 > ( file "sameYR_antiWS.bed")
-     } else if ($8 ~ /antiYR_antiWS/ && $7 > 0 ) { print $0 > ( file "antiYR_antiWS.bed")
-     } else if ($8 ~ /antiYR_sameWS/ && $7 > 0 ) { print $0 > ( file "antiYR_sameWS.bed")
-     } else if ($8 ~ /lessDNAencode/ && $7 > 0 ) { print $0 > ( file "lessDNAencode.bed")
-     } else if ($8 ~ /lowYR_sameWS/ && $7 > 0 ) { print $0 > ( file "lowYR_sameWS.bed")
-     }
-        }' $WRK/04_plusoneNucleosome/Adj+1Nuc_Di_TSS_all_phase.bed
-
-mv +1Nuc_*.bed $Reference/
-
-
 awk -v file="+1Nuc_" '{ if ( $8 ~ /YRWS/  && $13> 0 && $12> 0 && $11> 0 && $10> 0 && $21 !~ /Divergent/  && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160    )  { print $0 > ( file "YRWS.bed")
      } else if ( $8 ~ /sameYR_lowWS/  && $11> 0 && $10> 0 && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160  ) { print $0 > ( file "sameYR_lowWS.bed")
      } else if ( $8 ~ /sameYR_antiWS/ && $13< 0 && $12< 0 && $11> 0 && $10> 0 && $21 !~ /Divergent/  && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160   ) { print $0 > ( file "sameYR_antiWS.bed")
@@ -99,8 +84,21 @@ cat TSS_+1Nuc_YRWS.bed TSS_+1Nuc_sameYR_lowWS.bed TSS_+1Nuc_sameYR_antiWS.bed TS
 
 rm +1Nuc_*.bed
 
+awk -v file="+1Nuc_" '{ if ($8 ~ /YRWS/ && $7 > 0 ) { print $0 > ( file "YRWS.bed")
+     } else if ($8 ~ /sameYR_lowWS/ && $7 > 0 ) { print $0 > ( file "sameYR_lowWS.bed")
+     } else if ($8 ~ /sameYR_antiWS/ && $7 > 0 ) { print $0 > ( file "sameYR_antiWS.bed")
+     } else if ($8 ~ /antiYR_antiWS/ && $7 > 0 ) { print $0 > ( file "antiYR_antiWS.bed")
+     } else if ($8 ~ /antiYR_sameWS/ && $7 > 0 ) { print $0 > ( file "antiYR_sameWS.bed")
+     } else if ($8 ~ /lessDNAencode/ && $7 > 0 ) { print $0 > ( file "lessDNAencode.bed")
+     } else if ($8 ~ /lowYR_sameWS/ && $7 > 0 ) { print $0 > ( file "lowYR_sameWS.bed")
+     }
+        }' $WRK/04_plusoneNucleosome/Adj+1Nuc_Di_TSS_all_phase.bed
+
+mv +1Nuc_*.bed $Reference/
+
+
 cp $WRK/04_plusoneNucleosome/TSS_all_phase_adj+1Nuc_Di.bed $Reference/
-cp $WRK/05_Call_Motifs/WDR5/TSS_same_WDR5_M1.bed $Reference/
+cp $WRK/05_Call_RefPT/WDR5/TSS_same_WDR5_M1.bed $Reference/
 
 for file in  $WRK/04_plusoneNucleosome/adj+1Nuc_allphase_TSS.bed ; do
     filename=$(basename "$file" ".bed")
@@ -117,37 +115,37 @@ for file in  $WRK/04_plusoneNucleosome/adj+1Nuc_phase48.bed $WRK/04_plusoneNucle
 done
 
 
-for file in $WRK/05_Call_Motifs/*_Occupancy_1bp.bed ; do
+for file in $WRK/05_Call_RefPT/*_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 20 $WRK/05_Call_Motifs/${TF}/${TF}_M1.bed -o $Reference/${TF}_M1_20bp.bed
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 500 $WRK/05_Call_Motifs/${TF}/nearestTSS_${TF}_M1_same-oppo.bed -o $Reference/nearestTSS_${TF}_M1_same-oppo_500bp.bed
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/${TF}/nearestTSS_${TF}_M1_same-oppo.bed -o $Reference/nearestTSS_${TF}_M1_same-oppo_1000bp.bed
-    cp $WRK/05_Call_Motifs/${TF}/${TF}_M1.bed  $Reference/${TF}_M1.bed 
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 20 $WRK/05_Call_RefPT/${TF}/${TF}_M1.bed -o $Reference/${TF}_M1_20bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 500 $WRK/05_Call_RefPT/${TF}/nearestTSS_${TF}_M1_same-oppo.bed -o $Reference/nearestTSS_${TF}_M1_same-oppo_500bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/${TF}/nearestTSS_${TF}_M1_same-oppo.bed -o $Reference/nearestTSS_${TF}_M1_same-oppo_1000bp.bed
+    cp $WRK/05_Call_RefPT/${TF}/${TF}_M1.bed  $Reference/${TF}_M1.bed 
     java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $file -o $Reference/${TF}_Occupancy_1000bp.bed
     java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 32 $file -o $Reference/${TF}_Occupancy_32bp.bed
 done
 
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000  $WRK/05_Call_Motifs/WDR5/TSS_same_WDR5_M1.bed -o $Reference/TSS_same_WDR5_M1_1000bp.bed
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/WDR5/WDR5_M1_same_TSS.bed -o $Reference/WDR5_M1_same_TSS_1000bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000  $WRK/05_Call_RefPT/WDR5/TSS_same_WDR5_M1.bed -o $Reference/TSS_same_WDR5_M1_1000bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/WDR5/WDR5_M1_same_TSS.bed -o $Reference/WDR5_M1_same_TSS_1000bp.bed
 
-for file in $WRK/05_Call_Motifs/SP1_Occupancy_1bp.bed $WRK/05_Call_Motifs/NFYC_Occupancy_1bp.bed $WRK/05_Call_Motifs/GABPA_Occupancy_1bp.bed ; do
+for file in $WRK/05_Call_RefPT/SP1_Occupancy_1bp.bed $WRK/05_Call_RefPT/NFYC_Occupancy_1bp.bed $WRK/05_Call_RefPT/GABPA_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/${TF}/${TF}_M1_TSS_oppo_up100.bed -o $Reference/${TF}_M1_TSS_oppo_up100_1000bp.bed
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/${TF}/${TF}_M1_TSS_same_up100.bed -o $Reference/${TF}_M1_TSS_same_up100_1000bp.bed 
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/${TF}/${TF}_M1_TSS_same_noTATA.bed -o $Reference/${TF}_M1_TSS_same_noTATA_1000bp.bed 
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/${TF}/${TF}_M1_TSS_same_TATA.bed -o $Reference/${TF}_M1_TSS_same_TATA_1000bp.bed 
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/${TF}/${TF}_M1_TSS_oppo_up100.bed -o $Reference/${TF}_M1_TSS_oppo_up100_1000bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/${TF}/${TF}_M1_TSS_same_up100.bed -o $Reference/${TF}_M1_TSS_same_up100_1000bp.bed 
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/${TF}/${TF}_M1_TSS_same_noTATA.bed -o $Reference/${TF}_M1_TSS_same_noTATA_1000bp.bed 
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/${TF}/${TF}_M1_TSS_same_TATA.bed -o $Reference/${TF}_M1_TSS_same_TATA_1000bp.bed 
 done
 
-for file in $WRK/05_Call_Motifs/3MOTIF/*with*.bed ; do
-    filename=$(basename "$file" ".bed ")
+for file in $WRK/05_Call_RefPT/3MOTIF/*with*.bed ; do
+    filename=$(basename "$file" ".bed")
     java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $file -o $Reference/${filename}_1000bp.bed
 done
 
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/YY1/YY1_M1_TSS_oppo_overlap.bed -o $Reference/YY1_M1_TSS_oppo_overlap_1000bp.bed
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/YY1/YY1_M1_TSS_same_overlap.bed -o $Reference/YY1_M1_TSS_same_overlap_1000bp.bed 
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/YY1/YY1_M1_TSS_same_1.bed -o $Reference/YY1_M1_TSS_same_1_1000bp.bed
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/YY1/YY1_M1_TSS_same_2.bed -o $Reference/YY1_M1_TSS_same_2_1000bp.bed
-java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_Motifs/YY1/YY1_M1_TSS_same_3.bed -o $Reference/YY1_M1_TSS_same_3_1000bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/YY1/YY1_M1_TSS_oppo_overlap.bed -o $Reference/YY1_M1_TSS_oppo_overlap_1000bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/YY1/YY1_M1_TSS_same_overlap.bed -o $Reference/YY1_M1_TSS_same_overlap_1000bp.bed 
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/YY1/YY1_M1_TSS_same_1.bed -o $Reference/YY1_M1_TSS_same_1_1000bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/YY1/YY1_M1_TSS_same_2.bed -o $Reference/YY1_M1_TSS_same_2_1000bp.bed
+java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $WRK/05_Call_RefPT/YY1/YY1_M1_TSS_same_3.bed -o $Reference/YY1_M1_TSS_same_3_1000bp.bed
 
 
 

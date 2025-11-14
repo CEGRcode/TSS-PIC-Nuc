@@ -6,23 +6,26 @@
 WRK=/Path/to/Title/00_Download_and_Preprocessing
 ###
 
-module load samtools
-
-# Script shortcuts
+module load anaconda3
+source activate bioinfo
 PICARD=$WRK/../bin/picard.jar
+# Script shortcuts
 
-cd $WRK/../data/sample-BAM
-[ -d ../BAM ] || mkdir ../BAM
-
-
+cd $WRK
 # Dowload K562_IgG_BX_merge_hg38.bam from GEO GSE267711 
 # Dowload K562_FOXA1_BX_merge_hg38.bam from GEO GSE267711
 # Download Benzonase-seq BNase-seq_50U-10min_merge_hg38.bam and H3K4me3 ChIP-seq BNase-ChIP_H3K4me3_merge_hg38.bam from GSE266547
 
+[ -d $WRK/sample-BAM ] || mkdir $WRK/sample-BAM
+[ -d $WRK/../data ] || mkdir $WRK/../data
+ [-d $WRK/../data/BAM ] || mkdir $WRK/../data/BAM
+
+mv *.bam $WRK/sample-BAM
 # Use Picard to merge resequenced technical replicates, otherwise rename BAM using cp
 
 # ChIP-exo rep1
 
+cd $WRK/sample-BAM
 cp 34601_RBBP5_A300-109A_K562_-_-_-_BX_hg38.bam K562_RBBP5_BX_rep1_hg38.bam
 cp 33918_WDR5_HPA047182_K562_-_IMDM_-_BX_hg38.bam K562_WDR5_BX_rep1_hg38.bam
 cp 36714_GATA1_HPA000232_K562_-_IMDM_-_BX_hg38.bam K562_GATA1_BX_rep1_hg38.bam
@@ -116,12 +119,12 @@ java -jar $PICARD MergeSamFiles -I 34218_ZFP91_HPA065325_K562_-_IMDM_-_BX_hg38.b
                                 -I 33961_ZFP91_HPA065325_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_ZFP91_BX_rep1_hg38.bam  
 
-java -jar $PICARD MergeSamFiles -I 42132_Input_-_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 41941_Input_-_K562_-_IMDM_-_BX_hg38.bam \
+java -jar $PICARD MergeSamFiles -I 42132_Input_-_K562_-_IMDM_-_BI_hg38.bam \
+                                -I 41941_Input_-_K562_-_IMDM_-_BI_hg38.bam \
                                 -O K562_Input_Native100BI_rep1_hg38.bam 
 
-java -jar $PICARD MergeSamFiles -I 41943_Input_-_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 42133_Input_-_K562_-_IMDM_-_BX_hg38.bam \
+java -jar $PICARD MergeSamFiles -I 41943_Input_-_K562_-_IMDM_-_BI_hg38.bam \
+                                -I 42133_Input_-_K562_-_IMDM_-_BI_hg38.bam \
                                 -O K562_Input_Native1000BI_rep1_hg38.bam 
 
 java -jar $PICARD MergeSamFiles -I 33788_IgG_i5006_K562_-_-_Triptolide_BX_hg38.bam  \
@@ -223,13 +226,13 @@ java -jar $PICARD MergeSamFiles -I 36547_TFIIB_HPA061626_K562_-_IMDM_DMSO_BX_hg3
                                 -I 33809_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.bam               \
                                 -O DMSOK562_TFIIB_BX_rep2_hg38.bam
 
-
-cd $WRK/../data
-mv sample-BAM/K562_*.bam $BAM/
-mv sample-BAM/TriptolideK562_*.bam sample-BAM/DMSOK562_*.bam BAM/
+module load samtools
+cd $WRK
+mv $WRK/sample-BAM/K562_*.bam $WRK/../data/BAM
+mv $WRK/sample-BAM/TriptolideK562_*.bam $WRK/sample-BAM/DMSOK562_*.bam $WRK/../data/
 
 # Index set of BAM files
-for FILE in BAM/*.bam;
+for FILE in  $WRK/../data/BAM/*.bam;
 do
   [ -f $FILE.bai ] || samtools index $FILE
 done

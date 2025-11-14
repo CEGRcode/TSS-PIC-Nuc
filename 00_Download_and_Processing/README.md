@@ -38,9 +38,28 @@ Merge BAM files for technical replicates (and IgG biological replicates) and ren
 bash 2_Merge_Replicates.sh
 ```
 
-### 3_normalize_samples.sbatch
-Both TotalTag and NCIS normalization factors are calculated for each `data/BAM/SAMPLE.bam` and saved to `data/BAM/NormalizationFactors/` with the name `SAMPLE_NCISb.out`. For the NCIS, a blacklist reference and IgG control BAMs that are cell-line and assay-specific are input based on the standard BAM filename structure (parse `_` delimited tokens for assay and cell line info).
+### 3_RNA_download-ENCODE.sbatch
+Get Nascent RNA-seq data from ENCODE
 
+```
+bash 3_RNA_download-ENCODE.sbatch
+```
+### 3_scRNA_download-align-dedup-filter-merge.sbatch
+Get Nascent RNA-seq data from SRR
+
+```
+bash 3_scRNA_download-align-dedup-filter-merge.sbatch
+```
+
+### 4_download_conservation-snp.sh
+Download conservation and SNPs from USCS browser.
+make sure proper scripts in bin
+```
+bash 4_download_conservation-snp.sh
+```
+
+### 5_normalize_samples.sbatch
+Bo TotalTag and NCIS normalization factors are calculated for each `data/BAM/SAMPLE.bam` and saved to `data/BAM/NormalizationFactors/` with the name `SAMPLE_NCISb.out`. For the NCIS, a blacklist reference and IgG control BAMs that are cell-line and assay-specific are input based on the standard BAM filename structure (parse `_` delimited tokens for assay and cell line info).
 ```
 # ^change the number of BAM files samples (SBATCH --array)
 # To execute, type
@@ -49,9 +68,22 @@ sbatch 3_normalize_samples.sbatch
 # To check status, type
 sbatch -u <myusername> -t
 ```
-### 4_download_conservation-snp.sh
-Download conservation and SNPs from USCS browser.
-make sure proper scripts in bin
+### 6_Otherref.sh
+Download CpG island reference, TSS reference, nucleosome reference and hg38 annotation and processing
+
 ```
-bash 4_download_conservation-snp.sh
+sh 6_Otherref.sh
+```
+
+### 7_Get_PWM.sh
+rename PWM file 
+
+```
+sh 7_Get_PWM.sh
+```
+### 8_Call_Motifs.sbatch
+call TF binding motif by overlaping FIMO call and Chexmix peaks
+
+```
+sbatch 8_Call_Motifs.sbatch
 ```

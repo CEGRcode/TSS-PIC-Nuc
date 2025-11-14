@@ -1,18 +1,31 @@
 #!/bin/bash
 
-# File paths
-TF_NUC_RATIO="TFBS_phase_skew_ratios.tsv"
-PHASE_COUNT_DIR=count/"TFBS_phase_counts"
+# Usage check
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <TFBS_phase_skew_ratios.tsv> <TFBS_phase_counts_dir>"
+    exit 1
+fi
 
-if [ ! -f "$TF_NUC_RATIO" ]; then
-  echo "Error: $TF_NUC_RATIO not found!"
+# Command-line arguments
+TF_TSS_RATIO="$1"
+PHASE_COUNT_DIR="$2"
+
+# Check input file
+if [ ! -f "$TF_TSS_RATIO" ]; then
+  echo "Error: $TF_TSS_RATIO not found!"
+  exit 1
+fi
+
+# Check input directory
+if [ ! -d "$PHASE_COUNT_DIR" ]; then
+  echo "Error: Phase count directory not found: $PHASE_COUNT_DIR"
   exit 1
 fi
 
 mkdir -p TF-TSS_pie_charts  # Output directory
 
-# Loop through each line (skipping header)
-tail -n +2 "$TF_NUC_RATIO" | while IFS=$'\t' read -r TF orientation _ best_window; do
+# Loop through each line (skip header)
+tail -n +2 "$TF_TSS_RATIO" | while IFS=$'\t' read -r TF orientation _ best_window; do
 
   # Construct phase count file path
   PHASE_COUNT_FILE="${PHASE_COUNT_DIR}/${TF}_${orientation}.out"
@@ -25,7 +38,7 @@ tail -n +2 "$TF_NUC_RATIO" | while IFS=$'\t' read -r TF orientation _ best_windo
   # Convert best_window (e.g., "3-4-5-6-7") into Python list: [3, 4, 5, 6, 7]
   BEST_PHASES_LIST=$(echo "$best_window" | awk -F'-' '{printf "["; for (i=1; i<=NF; i++) printf "%s%s", $i, (i<NF?", ":""); print "]"}')
 
-    # Run Python to generate pie chart and calculate p-value
+  # Run Python inline
   python3 <<EOF
 import matplotlib.pyplot as plt
 from itertools import combinations
@@ -78,6 +91,5 @@ plt.savefig(f"TF-TSS_pie_charts/${TF}_${orientation}_phase_pie.png", dpi=300, tr
 print("✔️ Pie + permutation p-value saved: ${TF}_${orientation}")
 
 EOF
-
 
 done

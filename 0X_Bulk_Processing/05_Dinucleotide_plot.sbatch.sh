@@ -5,11 +5,11 @@
 #SBATCH -A open
 #SBATCH -o logs/Dinucleotide.log.out-%a
 #SBATCH -e logs/Dinucleotide.log.err-%a
-#SBATCH --array 1-94
+#SBATCH --array 1-2
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-METADATA=$WRK/X_Bulk_Processing/Dinucleotide_plot.txt
+METADATA=$WRK/0X_Bulk_Processing/Dinucleotide_plot.txt
 THREADS=4
 
 # Dependencies
@@ -25,14 +25,16 @@ source activate bioinfo
 # Fill in placeholder constants with your directories
 GENOME="$WRK/data/hg38_files/hg38.fa"
 # Script shortcuts
-SCRIPTMANAGER="$WRK/bin/ScriptManager-v0.15.jar"
+ORIGINAL_SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
+SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15-$SLURM_ARRAY_TASK_ID.jar
+cp $ORIGINAL_SCRIPTMANAGER $SCRIPTMANAGER
 COMPOSITE=$WRK/bin/sum_Col_CDT.pl
 MOTIFSCAN=$WRK/bin/scan_FASTA_for_motif_as_binary_string.py
 
 # Set up output directories
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library/
-cd $WRK/X_Bulk_Processing
+cd $WRK/0X_Bulk_Processing
 
 # Determine BED file for the current job array index
 BEDFILE=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $1}'`
@@ -53,9 +55,9 @@ BASE=${DI}_${BED}
 echo "Run Dinucleotode scan, make composite plot of dinucleotide"
 
 java -jar $SCRIPTMANAGER sequence-analysis fasta-extract $GENOME $BEDFILE -o $WRK/Library/${BED}.fa
-conda deactivate
+source deactivate
+source activate virtualenv
 python $MOTIFSCAN -i  $WRK/Library/${BED}.fa -m ${DI} -o $WRK/Library/${DI}_${BED}
-conda activate bioinfo
 rm $WRK/Library/${DI}_${BED}_anti.cdt
 perl $COMPOSITE $WRK/Library/${DI}_${BED}_sense.cdt $WRK/Library/${DI}_${BED}.out
 rm $WRK/Library/${BED}.fa
@@ -71,7 +73,7 @@ done
 
 rm $WRK/Library/${DI}_${BED}_sense.cdt
 rm $WRK/Library/${DI}_${BED}.out
-
+rm  $SCRIPTMANAGER
 
 
 

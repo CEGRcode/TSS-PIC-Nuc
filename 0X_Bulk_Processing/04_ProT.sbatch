@@ -9,7 +9,7 @@
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-METADATA=$WRK/X_Bulk_Processing/ProT-plot-heatmap.txt
+METADATA=$WRK/0X_Bulk_Processing/ProT-plot-heatmap.txt
 THREADS=4
 ###
 
@@ -33,7 +33,7 @@ COMPOSITE=$WRK/bin/sum_Col_CDT.pl
 # Set up output directories
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-cd $WRK/X_Bulk_Processing/
+cd $WRK/0X_Bulk_Processing/
 
 # Determine BED file for the current job array index
 BEDFILE=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $1}'`
