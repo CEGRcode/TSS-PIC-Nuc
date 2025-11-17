@@ -30,7 +30,7 @@ python $WRK/bin/TFBS_TSS.py TF_M1_nearestTSS.csv
 
 $WRK/bin/plot_all_tf_phase_Nuc_pies.sh TFBS_phase_skew_ratios_Nuc.tsv TFBS_phase_counts_Nuc
 
-python plot_all_tf_phase_TSS_pies.sh TFBS_phase_skew_ratios_TSS.tsv TFBS_phase_counts_TSS
+$WRK/bin/plot_all_tf_phase_TSS_pies.sh TFBS_phase_skew_ratios_TSS.tsv TFBS_phase_counts_TSS
 
 
 
