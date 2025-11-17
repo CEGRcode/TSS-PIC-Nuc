@@ -29,16 +29,18 @@ cd $WRK/sample-BAM
 cp 34601_RBBP5_A300-109A_K562_-_-_-_BX_hg38.bam K562_RBBP5_BX_rep1_hg38.bam
 cp 33918_WDR5_HPA047182_K562_-_IMDM_-_BX_hg38.bam K562_WDR5_BX_rep1_hg38.bam
 cp 36714_GATA1_HPA000232_K562_-_IMDM_-_BX_hg38.bam K562_GATA1_BX_rep1_hg38.bam
-cp 33911_DR1_HPA055308_K562_-_IMDM_-_BX_hg38.bam K562_DR1_BX_rep1_hg38.bam
-
- java -jar $PICARD MergeSamFiles -I 33943_Med1_HPA052818_K562_-_IMDM_-_BX_hg38.bam\
-                                -I 34204_Med1_HPA052818_K562_-_IMDM_-_BX_hg38.bam      \
-                                -O K562_MED1_BX_rep1_hg38.bam 
-                               
-java -jar $PICARD MergeSamFiles -I 33945_MED12_HPA003185_K562_-_IMDM_-_BX_hg38.bam \
-                                -I 34206_MED12_HPA003185_K562_-_IMDM_-_BX_hg38.bam \
-                                -O K562_MED12_BX_rep1_hg38.bam 
-
+cp 33910_Taf1_HPA001075_K562_-_IMDM_-_BX_hg38.bam K562_TAF1_BX_rep1_hg38.bam                           
+cp 40520_GTF2A1_HPA000869_K562_-_IMDM_Triptolide_BX_hg38.bam TriptolideK562_GTF2A1_BX_rep1_hg38.bam
+cp 40522_GTF2A1_HPA000869_K562_-_IMDM_DMSO_BX_hg38.bam DMSOK562_GTF2A1_BX_rep1_hg38.bam
+cp 33780_TBP_hTBP_K562_-_-_Triptolide_BX_hg38.bam    TriptolideK562_TBP_BX_rep1_hg38.bam      
+cp 33782_TBP_hTBP_K562_-_-_DMSO_BX_hg38.bam  DMSOK562_TBP_BX_rep1_hg38.bam
+cp 33776_PolII_ab76123_K562_-_-_Triptolide_BX_hg38.bam    TriptolideK562_PolII_BX_rep1_hg38.bam
+cp 33778_PolII_ab76123_K562_-_-_DMSO_BX_hg38.bam    DMSOK562_PolII_BX_rep1_hg38.bam
+cp 43161_Taf1_hTAF1serum5333_K562_-_IMDM_Triptolide_BX_hg38.bam     TriptolideK562_TAF1_BX_rep1_hg38.bam
+cp 43164_Taf3_HPA066184_K562_-_IMDM_Triptolide_BX_hg38.bam        TriptolideK562_TAF3_BX_rep1_hg38.bam
+cp 43168_Taf1_hTAF1serum5333_K562_-_IMDM_DMSO_BX_hg38.bam        DMSOK562_TAF2_BX_rep1_hg38.bam
+cp 43171_Taf3_HPA066184_K562_-_IMDM_DMSO_BX_hg38.bam        DMSOK562_TAF2_BX_rep3_hg38.bam
+cp 33911_DR1_HPA055308_K562_-_IMDM_-_BX_hg38.bam      K562_DR1_BX_rep1_hg38.bam    
 java -jar $PICARD MergeSamFiles -I 40049_E2F7_HPA064866_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 40080_E2F7_HPA064866_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_E2F7_BX_rep1_hg38.bam
@@ -83,7 +85,6 @@ java -jar $PICARD MergeSamFiles -I 32071_Sp1_HPA001853_K562_-_-_-_BX_hg38.bam \
                                 -I 32120_Sp1_HPA001853_K562_-_-_-_BX_hg38.bam \
                                 -O K562_SP1_BX_rep1_hg38.bam  
 
-cp 33910_Taf1_HPA001075_K562_-_IMDM_-_BX_hg38.bam K562_TAF1_BX_rep1_hg38.bam                           
 
 java -jar $PICARD MergeSamFiles -I 37571_Taf3_HPA066184_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 37424_Taf3_HPA066184_K562_-_IMDM_-_BX_hg38.bam \
@@ -149,12 +150,6 @@ java -jar $PICARD MergeSamFiles -I 36557_IgG_i5006_K562_-_IMDM_DMSO_BX_hg38.bam 
                                 -I 33853_IgG_i5006_K562_-_-_DMSO_BX_hg38.bam  \
                                 -O DMSOK562_IgG_BX_merge_hg38.bam
                                 
-cp 40520_GTF2A1_HPA000869_K562_-_IMDM_Triptolide_BX_hg38.bam TriptolideK562_GTF2A1_BX_rep1_hg38.bam
-cp 40522_GTF2A1_HPA000869_K562_-_IMDM_DMSO_BX_hg38.bam DMSOK562_GTF2A1_BX_rep1_hg38.bam
-cp 33780_TBP_hTBP_K562_-_-_Triptolide_BX_hg38.bam    TriptolideK562_TBP_BX_rep1_hg38.bam      
-cp 33782_TBP_hTBP_K562_-_-_DMSO_BX_hg38.bam  DMSOK562_TBP_BX_rep1_hg38.bam
-cp 33776_PolII_ab76123_K562_-_-_Triptolide_BX_hg38.bam    TriptolideK562_PolII_BX_rep1_hg38.bam
-cp 33778_PolII_ab76123_K562_-_-_DMSO_BX_hg38.bam    DMSOK562_PolII_BX_rep1_hg38.bam
 java -jar $PICARD MergeSamFiles -I 35295_TFIIB_HPA061626_K562_-_-_Triptolide_BX_hg38.bam    \
                                 -I 33997_TFIIB_HPA061626_K562_-_-_Triptolide_BX_hg38.bam    \
                                 -O TriptolideK562_TFIIB_BX_rep1_hg38.bam
@@ -167,8 +162,6 @@ java -jar $PICARD MergeSamFiles -I 35297_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.b
 cp 33903_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam  K562_GTF2A2_BX_rep1_hg38.bam
 cp 40517_GTF2A1_HPA000869_K562_-_IMDM_-_BX_hg38.bam K562_GTF2A1_BX_rep2_hg38.bam
 
-## DR1 and DRAP1 are same complex
-cp 33912_DRAP1_HPA006790_K562_-_IMDM_-_BX_hg38.bam K562_DRAP1_BX_rep1_hg38.bam
  ## ERCC3 and GTF2H1 GTF2H2 are components of the TFIIH complex                      
 java -jar $PICARD MergeSamFiles -I 33905_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 34074_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.bam \
@@ -208,12 +201,20 @@ cp 32099_USF1_1B8_K562_-_-_-_BX_hg38.bam K562_USF1_BX_rep2_hg38.bam
 cp 34606_WDR5_HPA047182_K562_-_-_-_BX_hg38.bam K562_WDR5_BX_rep2_hg38.bam
 cp 32097_YY1_1B2_K562_-_-_-_BX_hg38.bam K562_YY1_BX_rep2_hg38.bam
 cp 32245_ZFP91_A303-245A_K562_-_-_-_BX_hg38.bam K562_ZFP91_BX_rep2_hg38.bam
-cp 30699_GATA1_HPA000233_K562_-_-_Lysis-50Unuclease-10cycSonic-splintOligoswithout3primeddC-OnlyPost2ndLigationAmpure-52degreeAnnealing_BX_hg38.bam K562_GATA1_BX_rep2_hg38.bam
+#cp 30699_GATA1_HPA000233_K562_-_-_Lysis-50Unuclease-10cycSonic-splintOligoswithout3primeddC-OnlyPost2ndLigationAmpure-52degreeAnnealing_BX_hg38.bam K562_GATA1_BX_rep2_hg38.bam
 cp 34928_E2F7_A303-037A_K562_-_IMDM_-_BX_hg38.bam K562_E2F7_BX_rep2_hg38.bam
 cp 34607_GABPA_HPA003258_K562_-_-_-_BX_hg38.bam K562_GABPA_BX_rep2_hg38.bam
 cp 34617_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam K562_GTF2B_BX_rep2_hg38.bam
-cp 35371_NELFE_sc-377052_K562_-_IMDM_-_BX_hg38.bam K562_NELFE_BX_rep2_hg38.bam
-
+#cp 35371_NELFE_sc-377052_K562_-_IMDM_-_BX_hg38.bam K562_NELFE_BX_rep2_hg38.bam
+cp 43155_NFYC_HPA055011_K562_-_IMDM_-_BX_hg38.bam   K562_NFYC_BX_rep2_hg38.bam
+cp 43156_Taf1_hTAF1serum5333_K562_-_IMDM_-_BX_hg38.bam   K562_TAF1_BX_rep2_hg38.bam
+cp 43157_Taf3_HPA066184_K562_-_IMDM_-_BX_hg38.bam   K562_TAF3_BX_rep2_hg38.bam
+cp 43160_TBP_hTBPserum5300_K562_-_IMDM_Triptolide_BX_hg38.bam   TriptolideK562_TBP_BX_rep2_hg38.bam
+cp 43162_Taf1_hTAF1serum5333_K562_-_IMDM_Triptolide_BX_hg38.bam   TriptolideK562_TAF1_BX_rep2_hg38.bam
+cp 43163_Taf3_HPA066184_K562_-_IMDM_Triptolide_BX_hg38.bam    TriptolideK562_TAF2_BX_rep2_hg38.bam
+cp 43167_TBP_hTBPserum5300_K562_-_IMDM_DMSO_BX_hg38.bam   DMSOK562_TBP_BX_rep2_hg38.bam
+cp 43169_Taf1_hTAF1serum5333_K562_-_IMDM_DMSO_BX_hg38.bam     DMSOK562_TAF1_BX_rep2_hg38.bam
+cp 43170_Taf3_HPA066184_K562_-_IMDM_DMSO_BX_hg38.bam       DMSOK562_TAF3_BX_rep2_hg38.bam
 cp 41892_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native100BI_rep2_hg38.bam 
 cp 41945_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native1000BI_rep2_hg38.bam
 
@@ -237,10 +238,10 @@ java -jar $PICARD MergeSamFiles -I 36547_TFIIB_HPA061626_K562_-_IMDM_DMSO_BX_hg3
                                 -I 33809_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.bam               \
                                 -O DMSOK562_TFIIB_BX_rep2_hg38.bam
 
-
-cd $WRK/../data
-mv sample-BAM/K562_*.bam BAM/
-mv sample-BAM/TriptolideK562_*.bam sample-BAM/DMSOK562_*.bam BAM/
+module load samtools
+cd $WRK
+mv $WRK/sample-BAM/K562_*.bam $WRK/../data/BAM
+mv $WRK/sample-BAM/TriptolideK562_*.bam $WRK/sample-BAM/DMSOK562_*.bam $WRK/../data/
 
 # Index set of BAM files
 for FILE in  $WRK/../data/BAM/*.bam;
