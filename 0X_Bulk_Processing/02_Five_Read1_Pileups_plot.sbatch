@@ -5,7 +5,7 @@
 #SBATCH -A open
 #SBATCH -o logs/02_Five_Read1_Pileups_plot.log.out-%a
 #SBATCH -e logs/02_Five_Read1_Pileups_plot.log.err-%a
-#SBATCH --array 1-334
+#SBATCH --array 1-n
 
 ### CHANGE ME
 WRK=/Path/to/Title/

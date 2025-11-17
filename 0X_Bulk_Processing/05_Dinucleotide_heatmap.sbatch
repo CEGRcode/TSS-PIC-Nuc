@@ -9,7 +9,7 @@
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-METADATA=$WRK/X_Bulk_Processing/Dinucleotide_heatmap.txt
+METADATA=$WRK/0X_Bulk_Processing/Dinucleotide_heatmap.txt
 THREADS=4
 ###
 # Dependencies
@@ -30,7 +30,7 @@ MOTIFSCAN=$WRK/bin/scan_FASTA_for_motif_as_binary_string.py
 # Set up output directories
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library/
-cd $WRK/X_Bulk_Processing/
+cd $WRK/0X_Bulk_Processing/
 
 # Determine BED file for the current job array index
 BEDFILE=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $1}'`
@@ -75,14 +75,15 @@ echo "Run Dinucleotode scan, make heatmap"
 
 java -jar $SCRIPTMANAGER sequence-analysis fasta-extract $GENOME $BEDFILE -o $WRK/Library/${BED}.fa
 conda deactivate
+source activate virtualenv
 python $MOTIFSCAN -i  $WRK/Library/${BED}.fa -m ${DI} -o $WRK/Library/${DI}_${BED}
 source activate bioinfo
 rm $WRK/Library/${DI}_${BED}_anti.cdt
-
+conda deactivate
+source activate bioinfo
 java -jar -Djava.awt.headless=true $SCRIPTMANAGER figure-generation heatmap $HM_PARAMS -c $COLOR  $WRK/Library/${DI}_${BED}_sense.cdt -o $WRK/Library/${DI}_${BED}_sense.png
 java -jar -Djava.awt.headless=true $SCRIPTMANAGER figure-generation label-heatmap $WRK/Library/${DI}_${BED}_sense.png \
 	-l $LLABEL -m $MLABEL -r $RLABEL -w 1 -f 20 \
-	#-x $BED -y "$BED occurences (${NSITES} sites)" \
 	-o $WRK/Library/${DI}_${BED}_label.svg
 rm $WRK/Library/${DI}_${BED}_sense.cdt
 rm $WRK/Library/${DI}_${BED}_sense.png

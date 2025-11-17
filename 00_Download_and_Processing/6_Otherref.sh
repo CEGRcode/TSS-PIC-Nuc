@@ -1,23 +1,5 @@
-#!/bin/bash
-#SBATCH -N 1
-#SBATCH --mem=48gb
-#SBATCH -t 5:00:00
-#SBATCH -A open
-#SBATCH -o logs/GROcap_download-ENCODE.log.out
-#SBATCH -e logs/GROcap_download-ENCODE.log.err
 
-# Download capped GRO-cap data from ENCODE
-
-# data/BAM
-#   |--GRO-cap_ENCODE_merge_hg38.bam
-
-### CHANGE ME
 WRK=/Path/to/Title/00_Download_and_Preprocessing
-
-
-THREADS=8
-###
-
 # Dependencies
 # - java
 # - samtools

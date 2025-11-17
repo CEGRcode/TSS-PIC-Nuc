@@ -1,21 +1,13 @@
-## in R
-WRK=/Path/to/Title/
-## determin output
-[ -d logs ] || mkdir logs
-[ -d $WRK/Library/E11 ] || mkdir -p $WRK/Library/E11
-[ -d $WRK/Library/E14 ] || mkdir -p $WRK/Library/E14
-cd $WRK/Library/F3f
 
+## in R
 library(rGREAT)
 library(ggplot2)
 library(GenomicRanges)
 library(dplyr)
 library(forcats)
 getwd()
-setwd("$WRK/Library/E11")
+setwd("/Path/to/Title/Library/E11")
 list.files()
-cp $Reference/TSS_+1Nuc_*.bed $WRK/Library/E11
-
 
 bed_YRWS <- read.table("./TSS_+1Nuc_YRWS.bed")
 gr_YRWS <- GRanges(seqnames = bed_YRWS[, 1], ranges = IRanges(bed_YRWS[, 2], bed_YRWS[, 3]))
@@ -150,20 +142,17 @@ ggplot(combined, aes(x = source, y = description)) +
   theme(axis.text.y = element_text(size = 10))
 
 
-
-
 ### R
-getwd()
-[1] "/Users/hc2228"
+
 library(rGREAT)
 library(ggplot2)
 library(GenomicRanges)
 library(dplyr)
 library(forcats)
-setwd("$WRK/Library/E14")
+setwd("/Path/to/Title/Library/E14")
 list.files()
 
-cp 
+
 bed_WDR5_same <- read.table("./TSS_same_WDR5_M1.bed")
 gr_WDR5_same <- GRanges(seqnames = bed_WDR5_same[, 1], ranges = IRanges(bed_WDR5_same[, 2], bed_WDR5_same[, 3]))
 bed_bg <- read.table("./TSS_all_phase_adj+1Nuc_Di.bed")

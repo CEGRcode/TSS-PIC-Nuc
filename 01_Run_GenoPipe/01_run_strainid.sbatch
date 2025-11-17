@@ -9,7 +9,7 @@
 # Execute GenoPipe's StrainID module on all samples in the INPUTBAM directory (2024-Krebs_Science/data/BAM)
 
 ### CHANGE ME
-WRK=/path/to/2024-Krebs_Science/01_Run_GenoPipe
+WRK=/path/to/Title/01_Run_GenoPipe
 GENOPIPE=/path/to/GenoPipe
 ###
 

@@ -9,7 +9,7 @@
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-METADATA=$WRK/X_Bulk_Processing/Conservation-SNP.txt
+METADATA=$WRK/0X_Bulk_Processing/Conservation-SNP.txt
 THREADS=4
 ###
 
@@ -33,7 +33,7 @@ PILEUPBW=$WRK/bin/pileup_BigWig_on_RefPT.py
 # Set up output directories
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-cd $WRK/X_Bulk_Processing/
+cd $WRK/0X_Bulk_Processing/
 
 # Determine BED file for the current job array index
 BEDFILE=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $1}'`
@@ -46,7 +46,7 @@ IFS=';' read -ra PANELS <<< "$PANEL"
 
 # Pileup conservation scores
 CONSERVATION=$CDIR/hg38.phyloP30way.bw
-CONS=`basename $CONSERVATION ".bw"`
+CONS=phyloP30way
 
 echo $BED x $CONS
 
@@ -57,7 +57,7 @@ perl $COMPOSITE $WRK/Library/${CONS}_$BED.cdt $WRK/Library/${CONS}_$BED.out
 
 # Pileup SNPs
 DBSNP=$CDIR/dbSnp153_snv.bw
-SNP=`basename $DBSNP ".bw"`
+SNP=SNP
 
 echo $BED x $SNP
 

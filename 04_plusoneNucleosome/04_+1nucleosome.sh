@@ -413,7 +413,7 @@ done
 cat UniqNuc_+_matrix.cdt UniqNuc_-_matrix.cdt > UniqNuc_matrix.cdt
 rm UniqNuc_+_matrix.cdt UniqNuc_-_matrix.cdt
 
-python maxtrixcluster.py
+python $WRK/bin/maxtrixcluster.py  UniqNuc_matrix.cdt
 cat SCORES/UniqNuc_+.bed SCORES/UniqNuc_-.bed  > temp.bed
 tail -n +2 sites_kmeans_clustered.tsv | cut -f 6  | paste temp.bed - | awk -v filename="UniqNuc" '{
         if ($7 == "0" ) {
@@ -448,8 +448,6 @@ tail -n +2 sites_kmeans_clustered.tsv | cut -f 6  | paste temp.bed - | awk -v fi
             print > (filename "_14.bed")  
         } }'
 
-
-    
 for file in UniqNuc_*.bed ; do 
         filename=$(basename "$file" ".bed")
         java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 300 $file -o ${filename}_300bp.bed
@@ -486,8 +484,7 @@ awk '{OFS="\t"; print $7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$
 mkdir -p check
 mv UniqNuc_1.bed  UniqNuc_2.bed UniqNuc_10.bed UniqNuc_4.bed  UniqNuc_5.bed UniqNuc_6.bed UniqNuc_11.bed UniqNuc_7.bed UniqNuc_3.bed UniqNuc_8.bed UniqNuc_9.bed  UniqNuc_0.bed  UniqNuc_12.bed UniqNuc_13.bed UniqNuc_14.bed check/
 mv  *.out check
-## make matrix 
-python Correlation.py
+
 ## check each group score
 for file in check/UniqNuc_*.bed ; do
         filename=$(basename "$file" ".bed")
@@ -631,8 +628,6 @@ for file in check/UniqNuc_*.bed ; do
 
 done
 mv *_means.out check/
-
-
 
 cat TSS_Divergent_Adj+1Nuc_Di.bed TSS_Reference_Adj+1Nuc_Di.bed | sort -k29,29nr | awk '{OFS="\t"; print $23,$24,$25,$26,$27,$28,$29,$30,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22}' | \
 awk '{

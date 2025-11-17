@@ -5,11 +5,11 @@
 #SBATCH -A open
 #SBATCH -o logs/03_Five_Read1_Pileups_heatmap.log.out-%a
 #SBATCH -e logs/03_Five_Read1_Pileups_heatmap.log.err-%a
-#SBATCH --array 1-28
+#SBATCH --array 6-29
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-METADATA=$WRK/X_Bulk_Processing/Five_Read1_Pileups_plot.txt
+METADATA=$WRK/0X_Bulk_Processing/Five_Read1_Pileups_heatmap.txt
 THREADS=4
 ###
 
@@ -32,7 +32,7 @@ cp $ORIGINAL_SCRIPTMANAGER $SCRIPTMANAGER
 # Set up output directories
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-cd $WRK/X_Bulk_Processing
+cd $WRK/0X_Bulk_Processing
 
 # Determine insert filters for the current job array index
 MIN=`sed "${SLURM_ARRAY_TASK_ID}q;d" $METADATA | awk '{print $1}'`
@@ -88,11 +88,11 @@ HM_PARAMS="-p 0.95"
 # Parse normalization params and get scaling factor
 FACTOR=1
 if [ "$NORMALIZATION" == "NCIS" ]; then
-    NFFILE=$BAMDIR/NormalizationFactors/$BAM\_NCISb_ScalingFactors.out
+    NFFILE=$WRK/data/NormalizationFactors/$BAM\_NCISb_ScalingFactors.out
     [[ -f $NFFILE ]] || exit "Missing Normalization factor file (NCIS): $NFFILE"
     FACTOR=`grep 'Scaling factor' $NFFILE | awk -F" " '{print $3}'`
 elif [ "$NORMALIZATION" == "TotalTag" ]; then
-    NFFILE=$BAMDIR/NormalizationFactors/$BAM\_TotalTag_ScalingFactors.out
+    NFFILE=$WRK/data/NormalizationFactors/$BAM\_TotalTag_ScalingFactors.out
     [[ -f $NFFILE ]] || exit "Missing Normalization factor file (TotalTag): $NFFILE"
     FACTOR=`grep 'Scaling factor' $NFFILE | awk -F" " '{print $3}'`
 else
@@ -123,11 +123,8 @@ java -jar -Djava.awt.headless=true $SCRIPTMANAGER figure-generation merge-heatma
 
 # Label heatmap
 java -jar -Djava.awt.headless=true $SCRIPTMANAGER figure-generation label-heatmap $WRK/Library/${BASE}_merge.png \
-	-l $LLABEL -m $MLABEL -r $RLABEL -w 1 -f 20 \
-	#-x $BED -y "$BED occurences (${NSITES} sites)" \
-	-o "$OUTFILE"
-rm $WRK/Library/${BASE}_anti.cdt
-rm $WRK/Library/${BASE}_sense.cdt
+	-l $LLABEL -m $MLABEL -r $RLABEL -w 1 -f 20 -o "$OUTFILE"
+
 rm $WRK/Library/${BASE}_sense_treeview.png
 rm $WRK/Library/${BASE}_anti_treeview.png
 rm $WRK/Library/${BASE}_merge.png
@@ -140,7 +137,7 @@ for P in "${PANELS[@]}"; do
     cp "$OUTFILE" "$DIR/Heatmap/"
     cp $WRK/Library/${BASE}_Normalized_anti.cdt "$DIR/CDT"
     cp $WRK/Library/${BASE}_Normalized_sense.cdt "$DIR/CDT"
-    echo "Copied $OUTFILE to $DIR/Heatmap/ and $DIR/CDT " 
+    echo "Copied $OUTFILE to $DIR/Heatmap/ and $DIR/CDT" 
 done
 
 # Remove scaled matrix from top-level Library folder

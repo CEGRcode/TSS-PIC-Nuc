@@ -1,44 +1,56 @@
 module load anaconda3
-source activate bioinfo
-# Script for F2a and E5
+source activate virtualenv
+
 
 ### CHANGE ME
 WRK=/Path/to/Title/
-
+Reference=$WRK/0X_Bulk_Processing/Reference
 ###SCRIPT
 SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
-COMPOSITEFILTER=$WRK/bin/sum_Col_CDT_filter.pl
+COMPOSITE=$WRK/bin/sum_Col_CDT.pl
 ## determin output
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library/F4e ] || mkdir -p $WRK/Library/F4e
 [ -d $WRK/Library/E15 ] || mkdir -p $WRK/Library/E15
-
+[ -d $WRK/Library/E14a ] || mkdir -p $WRK/Library/E14a
+[ -d $WRK/Library/F5a ] || mkdir -p $WRK/Library/F5a
 cd $WRK/Library/F4e
-
 
 #make to TF_M1_adjNuc.csv and TF_M1_nearestTSS.csv
 
-python TFBS_Nuc.py
+echo -e "Site\tTFBS\tDistance_Nuc\tTFBS_phase\tTFBS_strand" > TF_M1_adjNuc.csv
+awk '{OFS="\t"} {print $4,$7,$30,$31,$32}' $WRK/05_Call_RefPT/TF_M1_AdjNuc_annotated.bed >> TF_M1_adjNuc.csv
 
-python TFBS_TSS.py
+python $WRK/bin/TFBS_Nuc.py TF_M1_adjNuc.csv
 
-python plot_all_tf_phase_Nuc_pies.sh
+echo -e "Site\tTFBS\tDistance_TSS\tTFBS_phase\tTFBS_strand" > TF_M1_nearestTSS.csv
+awk '{OFS="\t"} {print $4,$7,$30,$31,$32}' $WRK/05_Call_RefPT/TF_M1_nearestTSS_annotated.bed >> TF_M1_nearestTSS.csv
 
-python plot_all_tf_phase_TSS_pies.sh
+python $WRK/bin/TFBS_TSS.py TF_M1_nearestTSS.csv
 
-for file in *_Occupancy_1bp.bed ; do
+$WRK/bin/plot_all_tf_phase_Nuc_pies.sh TFBS_phase_skew_ratios_Nuc.tsv TFBS_phase_counts_Nuc
+
+$WRK/bin/plot_all_tf_phase_TSS_pies.sh TFBS_phase_skew_ratios_TSS.tsv TFBS_phase_counts_TSS
+
+
+
+cd $WRK/Library/E15
+conda deactivate 
+conda activate bioinfo
+for file in $WRK/05_Call_RefPT/*_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
     filename=$(basename "$file" "_1bp.bed")
+    mkdir -p "${TF}"
     mkdir -p "${TF}"/plot
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000  ${TF}/AdjNuc.bed -o ${TF}/AdjNuc_1000bp.bed
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000  ${TF}/TSS.bed -o ${TF}/TSS_1000bp.bed
-    java -jar $SCRIPTMANAGER peak-analysis peak-align-ref --separate -o ${TF}_M1_+1Nuc ${TF}/${TF}_M1.bed ${TF}/AdjNuc_1000bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000  $WRK/05_Call_RefPT/${TF}/AdjNuc.bed -o ${TF}/AdjNuc_1000bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000  $WRK/05_Call_RefPT/${TF}/TSS.bed -o ${TF}/TSS_1000bp.bed
+    java -jar $SCRIPTMANAGER peak-analysis peak-align-ref --separate -o ${TF}_M1_+1Nuc $WRK/05_Call_RefPT/${TF}/${TF}_M1.bed ${TF}/AdjNuc_1000bp.bed
     perl $COMPOSITE ${TF}_M1_+1Nuc_sense.cdt ${TF}_M1_+1Nuc_sense
     perl $COMPOSITE ${TF}_M1_+1Nuc_anti.cdt ${TF}_M1_+1Nuc_anti
     tail -1 ${TF}_M1_+1Nuc_sense | cat ${TF}_M1_+1Nuc_anti - > ${TF}/plot/${TF}_M1_+1Nuc.out
     rm  ${TF}_M1_+1Nuc_sense ${TF}_M1_+1Nuc_anti ${TF}_M1_+1Nuc_*.cdt
 
-    java -jar $SCRIPTMANAGER peak-analysis peak-align-ref --separate -o ${TF}_M1_TSS ${TF}/${TF}_M1.bed ${TF}/TSS_1000bp.bed
+    java -jar $SCRIPTMANAGER peak-analysis peak-align-ref --separate -o ${TF}_M1_TSS $WRK/05_Call_RefPT/${TF}/${TF}_M1.bed ${TF}/TSS_1000bp.bed
     perl $COMPOSITE ${TF}_M1_TSS_sense.cdt ${TF}_M1_TSS_sense
     perl $COMPOSITE ${TF}_M1_TSS_anti.cdt ${TF}_M1_TSS_anti
     tail -1 ${TF}_M1_TSS_sense | cat ${TF}_M1_TSS_anti - > ${TF}/plot/${TF}_M1_TSS.out
@@ -48,24 +60,23 @@ for file in *_Occupancy_1bp.bed ; do
     rm ${TF}/TSS_1000bp.bed
 done
 
-for file in *_Occupancy_1bp.bed ; do
+cp -r $WRK/Library/F4e/TF-Nuc_pie_charts  $WRK/Library/E15
+cp -r $WRK/Library/F4e/TF-TSS_pie_charts  $WRK/Library/E15
+cp $WRK/Library/F4e/TFBS_strand_bias_ratios.tsv $WRK/Library/E15
+
+cd $WRK/Library/E14a
+mkdir -p Heatmap 
+for file in WDR5_Occupancy_1bp.bed   YY1_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
-    TFBAM=../BAM/K562_${TF}_BX_rep1_hg38.bam
-    FACTOR=`grep 'Scaling factor' ../NormalizationFactors/K562_${TF}_BX_rep1_hg38_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
-    mkdir -p "$TF"/plot
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 ${TF}/nearestTSS_${TF}_M1_same-oppo.bed -o nearestTSS_${TF}_M1_same-oppo_1000bp.bed
     Ref=nearestTSS
-    java -jar $SCRIPTMANAGER peak-analysis peak-align-ref --separate -o ${TF}_M1_${Ref} ${TF}/${TF}_M1.bed nearestTSS_${TF}_M1_same-oppo_1000bp.bed
-    perl $COMPOSITE ${TF}_M1_${Ref}_sense.cdt ${TF}_M1_${Ref}_sense
-    perl $COMPOSITE ${TF}_M1_${Ref}_anti.cdt ${TF}_M1_${Ref}_anti
-    tail -1 ${TF}_M1_${Ref}_sense | cat ${TF}_M1_${Ref}_anti - > "$TF"/plot/${TF}_M1_${Ref}.out
-    rm ${TF}_M1_${Ref}_sense.cdt
-    rm ${TF}_M1_${Ref}_anti.cdt
-    rm ${TF}_M1_${Ref}_anti
-    rm ${TF}_M1_${Ref}_sense
-    rm nearestTSS_${TF}_M1_same-oppo_1000bp.bed
-    rm nearestTSS_${TF}_M1_same-oppo_500bp.bed
-    rm ${TF}_M1_20bp.bed
+    java -jar $SCRIPTMANAGER peak-analysis peak-align-ref --separate -o ${TF}_M1_${Ref} $Reference/${TF}_M1_20bp.bed $Reference/nearestTSS_${TF}_M1_same-oppo_500bp.bed
+    java -jar $SCRIPTMANAGER figure-generation heatmap -a 1 --blue ${TF}_M1_${Ref}_sense.cdt -o ${TF}_M1_${Ref}_sense.png
+    java -jar $SCRIPTMANAGER figure-generation heatmap -a 1 --red ${TF}_M1_${Ref}_anti.cdt -o ${TF}_M1_${Ref}_anti.png
+    java -jar $SCRIPTMANAGER figure-generation merge-heatmap ${TF}_M1_${Ref}_sense.png ${TF}_M1_${Ref}_anti.png -o ${TF}_M1_${Ref}_merge.png
+    java -jar $SCRIPTMANAGER figure-generation label-heatmap ${TF}_M1_${Ref}_merge.png -f 20 -l -250 -m 0 -r 250 -o Heatmap/${TF}_M1_${Ref}_merge.svg
+    rm ${TF}_M1_${Ref}_*.png ${TF}_M1_${Ref}_*.cdt
 done
-cd $WRK/Library/E15
+
+mv $WRK/Library/E14a/Heatmap/YY1_M1*.svg  $WRK/Library/F5a/Heatmap
+
 

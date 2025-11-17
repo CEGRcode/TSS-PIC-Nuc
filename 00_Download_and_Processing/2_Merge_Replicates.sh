@@ -25,6 +25,7 @@ mv *.bam $WRK/sample-BAM
 
 # ChIP-exo rep1
 
+cd $WRK/sample-BAM
 cp 34601_RBBP5_A300-109A_K562_-_-_-_BX_hg38.bam K562_RBBP5_BX_rep1_hg38.bam
 cp 33918_WDR5_HPA047182_K562_-_IMDM_-_BX_hg38.bam K562_WDR5_BX_rep1_hg38.bam
 cp 36714_GATA1_HPA000232_K562_-_IMDM_-_BX_hg38.bam K562_GATA1_BX_rep1_hg38.bam
@@ -164,7 +165,7 @@ java -jar $PICARD MergeSamFiles -I 35297_TFIIB_HPA061626_K562_-_-_DMSO_BX_hg38.b
 # ChIP-exo rep2
 ## GTF2A2 and GTF2A1 both are subunits of TFIIA
 cp 33903_GTF2A2_HPA056239_K562_-_IMDM_-_BX_hg38.bam  K562_GTF2A2_BX_rep1_hg38.bam
-cp 34499_GTF2A1_Antibody-1F2_K562_-_IMDM_-_BX_hg38.bam K562_GTF2A1_BX_rep2_hg38.bam
+cp 40517_GTF2A1_HPA000869_K562_-_IMDM_-_BX_hg38.bam K562_GTF2A1_BX_rep2_hg38.bam
 
 ## DR1 and DRAP1 are same complex
 cp 33912_DRAP1_HPA006790_K562_-_IMDM_-_BX_hg38.bam K562_DRAP1_BX_rep1_hg38.bam
@@ -175,6 +176,7 @@ java -jar $PICARD MergeSamFiles -I 33905_GTF2H1_HPA046660_K562_-_IMDM_-_BX_hg38.
 java -jar $PICARD MergeSamFiles -I 33906_GTF2H2_HPA047001_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 34075_GTF2H2_HPA047001_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_GTF2H2_BX_rep1_hg38.bam  
+
  ## NELFA and NELFB NELFE NELF are components of the NELF complex    
 java -jar $PICARD MergeSamFiles -I 33942_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 34203_NELFE_HPA046502_K562_-_IMDM_-_BX_hg38.bam \
@@ -193,25 +195,27 @@ java -jar $PICARD MergeSamFiles -I 38857_TAF9B_HPA045275_K562_-_IMDM_-_BX_hg38.b
                                 -O K562_TAF9B_BX_rep1_hg38.bam 
 ## real reaplicate 2 
 
-java -jar $PICARD MergeSamFiles -I 35104_EP300_A300-358A_K562_-_-_-_BX_hg38.bam \
-                                -I 34959_EP300_A300-358A_K562_-_-_-_BX_hg38.bam \
+java -jar $PICARD MergeSamFiles -I 34959_EP300_A300-358A_K562_-_IMDM_-_BX_hg38.bam \
+                                -I 35104_EP300_A300-358A_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_EP300_BX_rep2_hg38.bam
-cp 34504_GTF2H1_Antibody-1A10_K562_-_-_-_BX_hg38.bam K562_GTF2H1_BX_rep2_hg38.bam
+cp 34504_GTF2H1_Antibody-1A10_K562_-_IMDM_-_BX_hg38.bam K562_GTF2H1_BX_rep2_hg38.bam
 cp 34599_NRF1_3H1-s_K562_-_-_-_BX_hg38.bam K562_NRF1_BX_rep2_hg38.bam
 cp 32869_PolII_ab76123_K562_-_IMDM_-_BX_hg38.bam  K562_PolII_BX_rep2_hg38.bam
 cp 34600_RBBP5_A300-109A_K562_-_-_-_BX_hg38.bam K562_RBBP5_BX_rep2_hg38.bam
 cp 34604_Sp1_HPA001853_K562_-_-_-_BX_hg38.bam K562_SP1_BX_rep2_hg38.bam
 cp 32661_TBP_hTBPpurified_K562_-_-_-_BX_hg38.bam K562_TBP_BX_rep2_hg38.bam
 cp 32099_USF1_1B8_K562_-_-_-_BX_hg38.bam K562_USF1_BX_rep2_hg38.bam
-cp 34606_WDR5_HPA047182_K562_-_IMDM_-_BX_hg38.bam K562_WDR5_BX_rep2_hg38.bam
+cp 34606_WDR5_HPA047182_K562_-_-_-_BX_hg38.bam K562_WDR5_BX_rep2_hg38.bam
 cp 32097_YY1_1B2_K562_-_-_-_BX_hg38.bam K562_YY1_BX_rep2_hg38.bam
-cp 32245_ZFP91_A303-245A_K562_-_IMDM_-_BX_hg38.bam K562_ZFP91_BX_rep2_hg38.bam
-cp 30748_GATA1_HPA000232_K562_-_IMDM_-_BX_hg38.bam K562_GATA1_BX_rep2_hg38.bam
-cp 41892_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native100BI_rep2_hg38.bam 
-cp 41945_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native1000BI_rep2_hg38.bam
+cp 32245_ZFP91_A303-245A_K562_-_-_-_BX_hg38.bam K562_ZFP91_BX_rep2_hg38.bam
+cp 30699_GATA1_HPA000233_K562_-_-_Lysis-50Unuclease-10cycSonic-splintOligoswithout3primeddC-OnlyPost2ndLigationAmpure-52degreeAnnealing_BX_hg38.bam K562_GATA1_BX_rep2_hg38.bam
 cp 34928_E2F7_A303-037A_K562_-_IMDM_-_BX_hg38.bam K562_E2F7_BX_rep2_hg38.bam
 cp 34607_GABPA_HPA003258_K562_-_-_-_BX_hg38.bam K562_GABPA_BX_rep2_hg38.bam
 cp 34617_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam K562_GTF2B_BX_rep2_hg38.bam
+cp 35371_NELFE_sc-377052_K562_-_IMDM_-_BX_hg38.bam K562_NELFE_BX_rep2_hg38.bam
+
+cp 41892_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native100BI_rep2_hg38.bam 
+cp 41945_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native1000BI_rep2_hg38.bam
 
 ## will add TAF1 TAF3 NFYC replicate 2
 #cp 34531_NFYC_NFYC-1A11_K562_-_IMDM_-_BX_hg38.bam K562_NFYC_BX_rep2_hg38.bam
@@ -234,10 +238,9 @@ java -jar $PICARD MergeSamFiles -I 36547_TFIIB_HPA061626_K562_-_IMDM_DMSO_BX_hg3
                                 -O DMSOK562_TFIIB_BX_rep2_hg38.bam
 
 
-module load samtools
-cd $WRK
-mv $WRK/K562_*.bam $WRK/../data/BAM
-mv $WRK/sample-BAM/TriptolideK562_*.bam $WRK/sample-BAM/DMSOK562_*.bam $WRK/../data/
+cd $WRK/../data
+mv sample-BAM/K562_*.bam BAM/
+mv sample-BAM/TriptolideK562_*.bam sample-BAM/DMSOK562_*.bam BAM/
 
 # Index set of BAM files
 for FILE in  $WRK/../data/BAM/*.bam;
