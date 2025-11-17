@@ -7,7 +7,7 @@
 ### Correspondence:fp265@cornell.edu
 
 ### PMID : [XXXXXXXX](https://pubmed.ncbi.nlm.nih.gov/XXXXXXXX/)
-### GEO ID : [GSE266547](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE266547)
+### GEO ID : [GSE266547](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE266547) [GSEXXXXXX](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSEXXXXXX)
 
 ## Abstract
 How transcription initiation complexes assemble on native promoters remains poorly understood. Here we establish global rules governing assembly of the RNA polymerase (Pol) II initiation complex in human cells via integration of transcription start sites, TATA boxes, +1 nucleosome rotational phasing, transcription factor binding. Our findings support an integrated model in which three promoter features—upstream bidirectional sequence-specific transcription factors, directional core promoter elements, and a DNA-encoded rotationally phased +1 nucleosome—work together to concentrate and orient general transcription factors (TFIIA and TFIID) near core promoters. This arrangement directs TFIIA and TBP to the −30 region through a mechanism consistent with established biochemical data. This positions Pol II to conduct a tightly focused search for the optimal initiator dinucleotide. Pol II then initiates transcription and pauses at the +1 nucleosome, without disrupting its rotational unless the nucleosome itself is unstable. Together, these findings define key organizational principles that govern preinitiation complex assembly, transcription initiation, and pausing within the native chromatin landscape of promoters.
