@@ -1,16 +1,18 @@
-# A genome-wide integrated mechanism of Pol II initiation complex assembly
+# Fine architecture and mechanism of PIC assembly at natural genomic promoters
 
-### Haining Chen<sup>1</sup>, Olivia W. Lang<sup>1</sup>, William K. M. Lai<sup>1</sup>, B. Franklin Pugh<sup>1</sup>
+
+### Haining Chen<sup>1</sup>, Olivia W. Lang<sup>1</sup>, William K. M. Lai<sup>1,2</sup>, B. Franklin Pugh<sup>1,2,3</sup>
 
 <sup>1</sup>Department of Molecular Biology and Genetics, Cornell University, Ithaca, New York, 14853, USA
-
-### Correspondence:fp265@cornell.edu
+<sup>2</sup>Co-senior author
+<sup>3</sup>Correspondence:fp265@cornell.edu
 
 ### PMID : [XXXXXXXX](https://pubmed.ncbi.nlm.nih.gov/XXXXXXXX/)
 ### GEO ID : [GSE318610](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE318610)
 
 ## Abstract
-How transcription pre-initiation complexes (PICs) assemble within their natural genomic context remains poorly understood. Here we propose a molecular mechanism governing PIC assembly at human promoters genome-wide that integrates transcription start sites, TATA boxes, +1 nucleosomes, and transcription factor binding. We find that +1 nucleosomes have robust DNA-encoded rotational phasing that engages TFIID (TAF3). This, plus activator (e.g., SP1, GABPA and NFYC) interactions with TFIID (TAF4) and TFIIA concentrate and orient the transcription machinery within selected DNA gyres. Such placement positions RNA polymerase (Pol) II to conduct a tightly focused search for the optimal initiator dinucleotide. Pol II then initiates transcription and pauses at the +1 nucleosome without disrupting its rotational phase unless the nucleosome is unstable. Together, these findings define key organizational steps that govern PIC assembly, transcription initiation, and pausing within the natural chromatin landscape of promoters.
+How human transcription pre-initiation complexes (PICs) assemble at promoters and enhancers within their natural genomic context remains poorly understood. Little is known about the role of the +1 nucleosome including whether it is rotationally phased and whether such phasing is DNA-encoded. Little is known about how sequence-specific transcription factors (ssTFs) orchestrate PIC assembly through TFIID, TFIIA, the +1 nucleosome, and whether the helical DNA structure imparts constraints on assembly. Here we use single-bp resolution ChIP-exo, coupled to same-molecule measurements of nucleosome rotational phasing, to reveal the molecular architecture and mechanistic steps governing natural PIC assembly. We find that +1 nucleosomes have robust DNA-encoded rotational phasing that engages TFIID (TAF3) and other ssTFs. This, plus ssTF (SP1, GABPA and NFYC) interactions with TFIID (TAF4) and TFIIA concentrate and orient the PIC within selected DNA gyres as predicted by cryoEM structures. Such placement positions Pol II to conduct a tightly focused search for the optimal initiator. When Pol II initiates and pauses at the +1 nucleosome it disrupts rotational phasing but only where the +1 nucleosome is biochemically unstable. Together, these finding reveal how promoters naturally recruit TFIID to +1 nucleosomes and deliver TBP to the core promoter via activator-guided intra-TFIID hand-off of TBP.
+
 
 ## Directions
 To recreate the figures for this manuscript, please execute the scripts in each directory in numerical order. Each directory's README includes more specific details on execution. To be more explicit, run the scripts in each directory in the following order: `00_Download_and_Preprocessing`, `01_Run_GenoPipe`, `02_TSS_NFR`, `03_core-promoter`, `04_plusonenucleosome`, `05_Call_Motifs`, `0X_Bulk_Processing`, and then finally `Library`.
