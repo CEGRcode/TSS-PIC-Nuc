@@ -996,7 +996,7 @@ wc -l temp/TSS_phase*_adj+1Nuc.bed
 
 ## choose  phase 1 and phase 6 out, plot CoPRO and DNA encoding
 
-awk  '{ if (  $21 ~ /phase1/ || $21 ~ /phase9/ $21 ~ /phase0/ || $21 ~ /phase1/ || $21 ~ /phase2/ || $21 ~ /phase3/ ) { print $0 > ("adj+1Nuc_phase93.bed")
+awk  '{ if (  $21 ~ /phase1/ || $21 ~ /phase9/ || $21 ~ /phase0/ || $21 ~ /phase1/ || $21 ~ /phase2/ || $21 ~ /phase3/ ) { print $0 > ("adj+1Nuc_phase93.bed")
      }  }'  adj+1Nuc_allphase_TSS.bed
 
 bedtools intersect -v -a adj+1Nuc_allphase_TSS.bed -b adj+1Nuc_phase93.bed > adj+1Nuc_phase48.bed 
