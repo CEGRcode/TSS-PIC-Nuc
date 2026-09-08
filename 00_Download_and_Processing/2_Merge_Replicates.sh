@@ -201,25 +201,20 @@ cp 32099_USF1_1B8_K562_-_-_-_BX_hg38.bam K562_USF1_BX_rep2_hg38.bam
 cp 34606_WDR5_HPA047182_K562_-_-_-_BX_hg38.bam K562_WDR5_BX_rep2_hg38.bam
 cp 32097_YY1_1B2_K562_-_-_-_BX_hg38.bam K562_YY1_BX_rep2_hg38.bam
 cp 32245_ZFP91_A303-245A_K562_-_-_-_BX_hg38.bam K562_ZFP91_BX_rep2_hg38.bam
-#cp 30699_GATA1_HPA000233_K562_-_-_Lysis-50Unuclease-10cycSonic-splintOligoswithout3primeddC-OnlyPost2ndLigationAmpure-52degreeAnnealing_BX_hg38.bam K562_GATA1_BX_rep2_hg38.bam
 cp 34928_E2F7_A303-037A_K562_-_IMDM_-_BX_hg38.bam K562_E2F7_BX_rep2_hg38.bam
 cp 34607_GABPA_HPA003258_K562_-_-_-_BX_hg38.bam K562_GABPA_BX_rep2_hg38.bam
 cp 34617_GTF2B_HPA061626_K562_-_-_-_BX_hg38.bam K562_GTF2B_BX_rep2_hg38.bam
-#cp 35371_NELFE_sc-377052_K562_-_IMDM_-_BX_hg38.bam K562_NELFE_BX_rep2_hg38.bam
 cp 43155_NFYC_HPA055011_K562_-_IMDM_-_BX_hg38.bam   K562_NFYC_BX_rep2_hg38.bam
 cp 43156_Taf1_hTAF1serum5333_K562_-_IMDM_-_BX_hg38.bam   K562_TAF1_BX_rep2_hg38.bam
 cp 43157_Taf3_HPA066184_K562_-_IMDM_-_BX_hg38.bam   K562_TAF3_BX_rep2_hg38.bam
 cp 43160_TBP_hTBPserum5300_K562_-_IMDM_Triptolide_BX_hg38.bam   TriptolideK562_TBP_BX_rep2_hg38.bam
 cp 43162_Taf1_hTAF1serum5333_K562_-_IMDM_Triptolide_BX_hg38.bam   TriptolideK562_TAF1_BX_rep2_hg38.bam
-cp 43163_Taf3_HPA066184_K562_-_IMDM_Triptolide_BX_hg38.bam    TriptolideK562_TAF2_BX_rep2_hg38.bam
+cp 43163_Taf3_HPA066184_K562_-_IMDM_Triptolide_BX_hg38.bam    TriptolideK562_TAF3_BX_rep2_hg38.bam
 cp 43167_TBP_hTBPserum5300_K562_-_IMDM_DMSO_BX_hg38.bam   DMSOK562_TBP_BX_rep2_hg38.bam
 cp 43169_Taf1_hTAF1serum5333_K562_-_IMDM_DMSO_BX_hg38.bam     DMSOK562_TAF1_BX_rep2_hg38.bam
 cp 43170_Taf3_HPA066184_K562_-_IMDM_DMSO_BX_hg38.bam       DMSOK562_TAF3_BX_rep2_hg38.bam
 cp 41892_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native100BI_rep2_hg38.bam 
 cp 41945_Input_-_K562_-_IMDM_-_BI_hg38.bam K562_Input_Native1000BI_rep2_hg38.bam
-
-## will add TAF1 TAF3 NFYC replicate 2
-#cp 34531_NFYC_NFYC-1A11_K562_-_IMDM_-_BX_hg38.bam K562_NFYC_BX_rep2_hg38.bam
 
 java -jar $PICARD MergeSamFiles -I 33993_PolII_ab76123_K562_-_-_Triptolide_BX_hg38.bam \
                                 -I 35291_PolII_ab76123_K562_-_-_Triptolide_BX_hg38.bam \
