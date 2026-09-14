@@ -9,11 +9,11 @@
 # Download capped GRO-cap data from ENCODE
 
 # data/BAM
-#   |--GRO-cap_ENCODE_merge_hg38.bam
+#   |--ENCFF112MXH_Grocap_hg38.bam
+#   |--ENCFF663UAN_CoPRO_hg38.bam
 
 ### CHANGE ME
-WRK=/storage/group/bfp2/default/hxc585_HainingChen/2025_Chen_TF-Nuc/00_Download_and_Preprocessing
-WRK=/storage/home/owl5022/scratch/2024-Krebs_Science/00_Download_and_Preprocessing
+WRK=/Path/to/Title/00_Download_and_Preprocessing/
 THREADS=8
 ###
 
