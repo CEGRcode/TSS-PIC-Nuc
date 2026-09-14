@@ -59,6 +59,9 @@ INPUT_FILES=("CoPRO_Read2_TSS_1bp+.bed" "CoPRO_Read2_TSS_1bp-.bed")
 
 mkdir -p process SCORES
 mv CoPRO_Read2_TSS_1bp.bed process/
+##check number
+echo "CoPRO_Read2_TSS_1bp.bed : $(wc -l < process/CoPRO_Read2_TSS_1bp.bed) sites"
+#CoPRO_Read2_TSS_1bp.bed : 5083030 sites
 
 # Function to split file into chunks
 split_bed_file() {
@@ -164,15 +167,20 @@ cat a.bed b.bed | bedtools sort -i | uniq > c.bed
 cut -f 7 c.bed | paste TSS_test.bed - | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7"_"$8}' > TSS.bed
 
 rm TSS_test.bed a.bed b.bed c.bed 
-mv TSS_1bp_center.bed TSS_1bp_flanking.bed  TSS_4bp-CLUSTER.bed   TSS_4bp-FILTER.bed TSS.bed ../process/
+mv TSS_1bp_center.bed TSS_1bp_flanking.bed  TSS_4bp-CLUSTER.bed   TSS_4bp-FILTER.bed TSS.bed process/
 
-cat TSS.bed | \
-awk '{
-    if ($7 ~ /_c/)  print $0 > "TSS_1bp_center.bed";
-    else if ($7 ~ /_f/) print $0 > "TSS_1bp_flanking.bed";
-}' 
+##check number
+echo "TSS.bed : $(wc -l < process/TSS.bed) sites"
+#TSS.bed :   747249 sites
+echo "TSS_1bp_center.bed : $(wc -l < process/TSS_1bp_center.bed) sites"
+#TSS_1bp_center.bed : 437986 sites
+echo "TSS_1bp_flanking.bed : $(wc -l < process/TSS_1bp_flanking.bed) sites"
+#TSS_1bp_flanking.bed : 309263 sites
 
-cat TSS_1bp_center.bed | bedtools sort -i | uniq > TSS_Inr.bed
+
+#####centered TSS is candidate Inr, The main Inr is the the strongest one in 40bp, others are alternative Inr
+
+cat process/TSS_1bp_center.bed | bedtools sort -i | uniq > TSS_Inr.bed
 awk '{if ($6 == "+" ) print $0 > "TSS_Inr_+.bed" ; else print $0 > "TSS_Inr_-.bed" }' TSS_Inr.bed
 
 java -jar $SCRIPTMANAGER peak-analysis filter-bed -e 40 -o TSS_Inr_+ TSS_Inr_+.bed
@@ -190,9 +198,13 @@ awk '{
 }' 
 
 rm a.bed b.bed c.bed TSS_Inr_+-FILTER.bed TSS_Inr_--FILTER.bed TSS_Inr_+-CLUSTER.bed TSS_Inr_--CLUSTER.bed TSS_Inr_+.bed TSS_Inr_-.bed
+##check number
+echo "Alternative_Inr_0_1bp.bed : $(wc -l < Alternative_Inr_0_1bp.bed) sites"
+#Alternative_Inr_0_1bp.bed :   253542 sites
+echo "Main_Inr_0_1bp.bed : $(wc -l < Main_Inr_0_1bp.bed) sites"
+#Main_Inr_0_1bp.bed :   184444 sites
 
 ## Assoicate nucleosome to TSS
-
 bedtools closest -a Main_Inr_0_1bp.bed -b "$Nuc" -d -D a -t first | bedtools sort -i | uniq | sort -k14,14n > K562_TSS_Near_Nuc_1.bed 
 
 awk '{
@@ -214,6 +226,12 @@ rm K562_TSS_NFR_2.bed
 cat K562_TSS_NFR.bed K562_TSS_NDR.bed | bedtools sort -i - | uniq | sort -k14,14n | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7"_"$15,$8,$9,$10,$11,$12,$13,$14 }' > K562_TSS_Near_Nuc.bed
 rm K562_TSS_NFR.bed K562_TSS_NDR.bed
 
+##check number
+echo "K562_TSS_Near_Nuc.bed : $(wc -l < K562_TSS_Near_Nuc.bed) sites"
+#K562_TSS_Near_Nuc.bed : 184444 sites
+
+
+####
 bedtools sort -i K562_TSS_Near_Nuc.bed | uniq | awk '{if ($7 ~/NDR/) print $0 > "K562_TSS_NDR.bed" ; else  print $0 > "K562_TSS_NFR_+1Nuc.bed"}' 
 
 awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7}' K562_TSS_NFR_+1Nuc.bed |  bedtools sort -i - | uniq | bedtools closest -a - -b "$Nuc" -d -io -id -D a | cut -f 8-14 | paste K562_TSS_NFR_+1Nuc.bed - | \
@@ -231,7 +249,12 @@ rm K562_TSS_Dynamic_-1Nuc.bed K562_TSS_Dynamic_+1Nuc.bed K562_TSS_NDR.bed
 cat K562_TSS_NFR_+1Nuc_-1Nuc.bed K562_TSS_NDR_+1Nuc_-1Nuc.bed | bedtools sort -i - | uniq > K562_TSS_+1Nuc_-1Nuc.bed
 rm K562_TSS_NFR_+1Nuc_-1Nuc.bed K562_TSS_NDR_+1Nuc_-1Nuc.bed
 
-# Take NFR of each TSS
+##check number
+echo "K562_TSS_+1Nuc_-1Nuc.bed : $(wc -l < K562_TSS_+1Nuc_-1Nuc.bed) sites"
+#K562_TSS_+1Nuc_-1Nuc.bed : 184444 sites
+
+
+# Take NFR of each TSS, remove tRAN region,  take first and second TSS in each  NFR. first TSS is the stongest one among all same strand TSS in on NFR
 
 awk '{if (($6 == "+") && ($10 != "-1") &&  ($15 != "-1"))  print $0 > "TSS+_+1Nuc_-1Nuc.bed" ; else if (($6 == "-") && ($10 != "-1") &&  ($15 != "-1")) print $0 > "TSS-_+1Nuc_-1Nuc.bed" }' K562_TSS_+1Nuc_-1Nuc.bed
 awk '{OFS="\t"} {print $1,$14,$9,$1"_"$14"_"$9,$9-$14,"+",$2,$3,$4,$5,$6,$7}' TSS+_+1Nuc_-1Nuc.bed | awk '{if ($5 >= 0) print $0 > "TSS+_NFR_temp.bed" }' 
@@ -332,6 +355,12 @@ rm TSS-_NFR_2.bed TSS+_NFR_2.bed TSS-_NFR.bed TSS+_NFR.bed
 bedtools intersect -v -a TSS_NFR.bed -b First_TSS_NFR.bed | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7"_Second",$8,$9,$10,$11}' | bedtools sort -i | uniq | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$6}' > Second_TSS_NFR.bed 
 rm TSS_NFR.bed
 
+##check number
+echo "Second_TSS_NFR.bed : $(wc -l < Second_TSS_NFR.bed) sites"
+#Second_TSS_NFR.bed :    53795 sites
+echo "First_TSS_NFR.bed : $(wc -l < First_TSS_NFR.bed) sites"
+#First_TSS_NFR.bed :    129935 sites
+
 ## Take the distance to closest nucleosome
 bedtools sort -i K562_TSS_Near_Nuc.bed | bedtools closest -a First_TSS_NFR.bed -b - -s  | awk '{if ($4 == $16) print $0 > "Temp.bed"}'
 awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$26,$7,$8,$9,$10,$11}' Temp.bed > First_TSS_NFR_Nuc.bed 
@@ -339,6 +368,12 @@ rm Temp.bed
 bedtools sort -i K562_TSS_Near_Nuc.bed | bedtools closest -a Second_TSS_NFR.bed -b - -s  | awk '{if ($4 == $16) print $0 > "Temp.bed"}'
 awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$26,$7,$8,$9,$10,$11}' Temp.bed > Second_TSS_NFR_Nuc.bed
 rm Temp.bed
+
+##check number
+echo "Second_TSS_NFR_Nuc.bed : $(wc -l < Second_TSS_NFR_Nuc.bed) sites"
+#Second_TSS_NFR.bed_Nuc :    53795 sites
+echo "First_TSS_NFR_Nuc.bed : $(wc -l < First_TSS_NFR_Nuc.bed) sites"
+#First_TSS_NFR_Nuc.bed :    129935 sites
 
 ## find TSSs share same NFR, divergent or convergent
 awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}' First_TSS_NFR_Nuc.bed  | awk '{if ($6 == "+") print $0 > "First_TSS+.bed" ; else print $0 > "First_TSS-.bed"}'  
@@ -548,6 +583,7 @@ mv *_Flanking_TU.bed    First_TSS_NFR/
 mv First_Singleton_TSS_TU.bed First_Divergent_TSS_TU.bed First_Reference_TSS_TU.bed Second_Divergent_TSS_TU.bed First_Secondpair_TSS_TU.bed     First_TSS_NFR/
 mv First_Convergent_TSS_TU.bed First_Convergentpair_TSS_TU.bed  Second_Convergent_TSS_TU.bed First_ConvergentSecondpair_TSS_TU.bed  First_TSS_NFR/
 
+
 ## Take TU with orientated TSS above threthold and TU in cononical distance
 
 cat First_Secondpair_TSS_center_TU.bed First_Reference_TSS_center_TU.bed First_Singleton_TSS_center_TU.bed | awk '{
@@ -625,6 +661,30 @@ bedtools intersect -c -a TSS_oriabove_center_TU_Uniq_80bp.bed -b Alternative_Inr
 cat TSS_oriabove_center_TU_Uniq_80bp_Alternative.bed | cut -f 15  | paste TSS_oriabove_center_TU_Uniq.bed -  > TSS_oriabove_center_TU_Uniq_Alter.bed
 rm TSS_oriabove_center_TU_Uniq_80bp_Alternative.bed TSS_oriabove_center_TU_Uniq_80bp.bed
 
+##check number
+echo "TSS_oriabove_center_TU_Uniq_Alter.bed : $(wc -l < TSS_oriabove_center_TU_Uniq_Alter.bed) sites"
+#TSS_oriabove_center_TU_Uniq_Alter.bed :    54917 sites
+echo "First_TSS_NFR/Orientated_oribelow_center_TU.bed : $(wc -l < First_TSS_NFR/Orientated_oribelow_center_TU.bed) sites"
+#First_TSS_NFR/Orientated_oribelow_center_TU.bed : 41729 sites
+echo "First_TSS_NFR/Divergent_oribelow_center_TU.bed : $(wc -l < First_TSS_NFR/Divergent_oribelow_center_TU.bed) sites"
+#First_TSS_NFR/Divergent_oribelow_center_TU.bed : 1999 sites
+echo "First_TSS_NFR/Singleton_unreal_center_TU.bed : $(wc -l < First_TSS_NFR/Singleton_unreal_center_TU.bed) sites"
+#First_TSS_NFR/Singleton_unreal_center_TU.bed : 5636 sites
+
+echo "First_TSS_NFR/First_Divergent_TSS_Flanking_TU.bed : $(wc -l < First_TSS_NFR/First_Divergent_TSS_Flanking_TU.bed) sites"
+#First_TSS_NFR/First_Divergent_TSS_Flanking_TU.bed : 5075 sites
+echo "First_TSS_NFR/First_Reference_TSS_Flanking_TU.bed : $(wc -l < First_TSS_NFR/First_Reference_TSS_Flanking_TU.bed) sites"
+#First_TSS_NFR/First_Reference_TSS_Flanking_TU.bed : 4977 sites
+echo "First_TSS_NFR/First_Secondpair_TSS_Flanking_TU.bed : $(wc -l < First_TSS_NFR/First_Secondpair_TSS_Flanking_TU.bed) sites"
+#First_TSS_NFR/First_Secondpair_TSS_Flanking_TU.bed : 317 sites
+echo "First_TSS_NFR/First_Singleton_TSS_Flanking_TU.bed : $(wc -l < First_TSS_NFR/First_Singleton_TSS_Flanking_TU.bed) sites"
+#First_TSS_NFR/First_Singleton_TSS_Flanking_TU.bed : 5807 sites
+echo "First_TSS_NFR/First_Convergent_TSS_TU.bed : $(wc -l < First_TSS_NFR/First_Convergent_TSS_TU.bed) sites"
+#First_TSS_NFR/First_Convergent_TSS_TU.bed : 2075 sites
+echo "First_TSS_NFR/First_ConvergentSecondpair_TSS_TU.bed : $(wc -l < First_TSS_NFR/First_ConvergentSecondpair_TSS_TU.bed) sites"
+#First_TSS_NFR/First_ConvergentSecondpair_TSS_TU.bed : 3409 sites
+echo "First_TSS_NFR/First_Convergentpair_TSS_TU.bed : $(wc -l < First_TSS_NFR/First_Convergentpair_TSS_TU.bed) sites"
+#First_TSS_NFR/First_Convergentpair_TSS_TU.bed : 2075 sites
 
 ## plot
 sort -k5,5nr TSS_oriabove_center_TU_Uniq_Alter.bed |  awk '{
@@ -646,30 +706,29 @@ sort -k5,5nr TSS_oriabove_center_TU_Uniq_Alter.bed |  awk '{
     else if ($8 ~ /-1_CC/) print $0 > "TSS_CC_all.bed"
 }' 
 
-
-wc -l TSS_*_all.bed
-
-     603 TSS_AA_all.bed
-     107 TSS_AC_all.bed
-     516 TSS_AG_all.bed
-     176 TSS_AT_all.bed
-   26268 TSS_CA_all.bed
-    1469 TSS_CC_all.bed
-    3699 TSS_CG_all.bed
-    1129 TSS_CT_all.bed
-    2132 TSS_GA_all.bed
-     219 TSS_GC_all.bed
-    1130 TSS_GG_all.bed
-      76 TSS_GT_all.bed
-    6445 TSS_TA_all.bed
-     924 TSS_TC_all.bed
-    4936 TSS_TG_all.bed
-     350 TSS_TT_all.bed
-   50179 total
+## new number:
+ wc -l TSS_*_all.bed
+ #    671 TSS_AA_all.bed
+ #    125 TSS_AC_all.bed
+  #   546 TSS_AG_all.bed
+  #   207 TSS_AT_all.bed
+  # 28772 TSS_CA_all.bed
+ #   1644 TSS_CC_all.bed
+  #  4038 TSS_CG_all.bed
+  #  1223 TSS_CT_all.bed
+   # 2350 TSS_GA_all.bed
+  #   243 TSS_GC_all.bed
+  #  1267 TSS_GG_all.bed
+  #    82 TSS_GT_all.bed
+  #  7020 TSS_TA_all.bed
+  #   995 TSS_TC_all.bed
+  #  5364 TSS_TG_all.bed
+  #   370 TSS_TT_all.bed
+ #  54917 total   
 
 cat TSS_CA_all.bed TSS_TA_all.bed TSS_GA_all.bed TSS_AA_all.bed TSS_CG_all.bed TSS_TG_all.bed TSS_GG_all.bed TSS_AG_all.bed TSS_CC_all.bed TSS_TC_all.bed TSS_GC_all.bed TSS_AC_all.bed TSS_CT_all.bed TSS_TT_all.bed TSS_GT_all.bed TSS_AT_all.bed > TSS_4color.bed
-
-
+mkdir -p Inr_group
+mv TSS_CA_all.bed TSS_TA_all.bed TSS_GA_all.bed TSS_AA_all.bed TSS_CG_all.bed TSS_TG_all.bed TSS_GG_all.bed TSS_AG_all.bed TSS_CC_all.bed TSS_TC_all.bed TSS_GC_all.bed TSS_AC_all.bed TSS_CT_all.bed TSS_TT_all.bed TSS_GT_all.bed TSS_AT_all.bed Inr_group/
 cd Inr_group/
 cat TSS_CA_all.bed TSS_TA_all.bed TSS_GA_all.bed TSS_AA_all.bed TSS_CG_all.bed TSS_TG_all.bed TSS_GG_all.bed TSS_AG_all.bed TSS_CC_all.bed TSS_TC_all.bed TSS_GC_all.bed  > Inr.bed
 cat TSS_AC_all.bed TSS_CT_all.bed TSS_TT_all.bed TSS_GT_all.bed TSS_AT_all.bed > nonInr.bed
@@ -688,7 +747,6 @@ cat Center_TU_proteincoding_TSS-PIC.bed Center_TU_noncoding_TSS-PIC.bed  Center_
 cat Center_TU_proteincoding_TSS-PIC.bed Center_TU_noncoding_TSS-PIC.bed  Center_TU_other_TSS-PIC.bed | bedtools intersect -v -a - -b Center_TU_CpG_TSS-PIC.bed | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7"_noCpG",$8,$9,$10,$11,$12,$13,$14,$15}' > Center_TU_noCpG_TSS-PIC.bed 
 
 rm Center_TU_proteincoding_TSS-PIC.bed Center_TU_noncoding_TSS-PIC.bed  Center_TU_other_TSS-PIC.bed
-
 
 ## check TU overlap ChromHMM labeling
 cat Center_TU_CpG_TSS-PIC.bed  Center_TU_noCpG_TSS-PIC.bed | bedtools intersect -u -a - -b $Enhancer | awk '{OFS="\t"} {print $1,$8,$9,$10,$11,$12,$13,$14,$2,$3,$4,$5,$6,$7"_Enhancer",$15}' > TSS_center_TU_Enhancer.bed
@@ -709,22 +767,22 @@ else if (($8 !~ /Divergent/) && ($14 ~ /Repressive/)) print $0 > "Orientated_TSS
 else if (($8 !~ /Divergent/) && ($14 ~ /NonHMM/)) print $0 > "Orientated_TSS_center_TU_NonHMM_PIC.bed" }' 
 
 wc -l Orientated_TSS_center_TU_Enhancer_PIC.bed
-13554 Orientated_TSS_center_TU_Enhancer_PIC.bed
+#13554 Orientated_TSS_center_TU_Enhancer_PIC.bed
 
 wc -l Orientated_TSS_center_TU_Promoter_PIC.bed
-11549 Orientated_TSS_center_TU_Promoter_PIC.bed
+#11549 Orientated_TSS_center_TU_Promoter_PIC.bed
 
 wc -l Orientated_TSS_center_TU_NonHMM_PIC.bed
-124 Orientated_TSS_center_TU_NonHMM_PIC.bed
+#124 Orientated_TSS_center_TU_NonHMM_PIC.bed
 
 wc -l Orientated_TSS_center_TU_Transcription_PIC.bed
-1367 Orientated_TSS_center_TU_Transcription_PIC.bed
+#1367 Orientated_TSS_center_TU_Transcription_PIC.bed
 
 wc -l Orientated_TSS_center_TU_Insulator_PIC.bed
- 66 Orientated_TSS_center_TU_Insulator_PIC.bed
+#66 Orientated_TSS_center_TU_Insulator_PIC.bed
 
 wc -l Orientated_TSS_center_TU_Repressive_PIC.bed
-937 Orientated_TSS_center_TU_Repressive_PIC.bed
+#937 Orientated_TSS_center_TU_Repressive_PIC.bed
 
 ## Calculate Bidirectional/unidirectional numbers of each  Chrom HMM labeling
 cat Orientated_TSS_center_TU_Enhancer_PIC.bed Orientated_TSS_center_TU_Promoter_PIC.bed Orientated_TSS_center_TU_NonHMM_PIC.bed Orientated_TSS_center_TU_Transcription_PIC.bed Orientated_TSS_center_TU_Insulator_PIC.bed Orientated_TSS_center_TU_Repressive_PIC.bed | \
@@ -755,18 +813,18 @@ wc -l Bi_Repressive.bed
 wc -l Uni_NonHMM.bed
 wc -l Bi_NonHMM.bed
 
-    1394 Uni_Promoter.bed
-   10155 Bi_Promoter.bed
-    3826 Uni_Enhancer.bed
-    9728 Bi_Enhancer.bed
-    1332 Uni_Transcription.bed
-      35 Bi_Transcription.bed
-      65 Uni_Insulator.bed
-       1 Bi_Insulator.bed
-     800 Uni_Repressive.bed
-     137 Bi_Repressive.bed
-      60 Uni_NonHMM.bed
-      64 Bi_NonHMM.bed
+#    1394 Uni_Promoter.bed
+#   10155 Bi_Promoter.bed
+#    3826 Uni_Enhancer.bed
+#    9728 Bi_Enhancer.bed
+#    1332 Uni_Transcription.bed
+#      35 Bi_Transcription.bed
+#      65 Uni_Insulator.bed
+#       1 Bi_Insulator.bed
+#     800 Uni_Repressive.bed
+#     137 Bi_Repressive.bed
+#      60 Uni_NonHMM.bed
+#      64 Bi_NonHMM.bed
 
 rm Uni_*.bed
 rm Bi_*.bed
@@ -777,4 +835,10 @@ cat TSS_center_TU_Promoter.bed TSS_center_TU_Enhancer.bed TSS_center_TU_Transcri
 
 rm Orientated_TSS_center_TU_Enhancer_PIC.bed Orientated_TSS_center_TU_Promoter_PIC.bed Orientated_TSS_center_TU_NonHMM_PIC.bed Orientated_TSS_center_TU_Transcription_PIC.bed Orientated_TSS_center_TU_Insulator_PIC.bed Orientated_TSS_center_TU_Repressive_PIC.bed
 mv TSS_center_TU_Promoter.bed TSS_center_TU_Enhancer.bed TSS_center_TU_Transcription.bed TSS_center_TU_Insulator.bed TSS_center_TU_Repressive.bed TSS_center_TU_NonHMM.bed annotation_region/
+
+echo "center_TU_TSS-PIC.bed : $(wc -l < center_TU_TSS-PIC.bed) sites"
+ #center_TU_TSS-PIC.bed :    54917 sites
+
+echo "TSS_center_TU_PIC.bed : $(wc -l < TSS_center_TU_PIC.bed) sites"
+#TSS_center_TU_PIC.bed :    54476 sites
 
