@@ -10,11 +10,10 @@ SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
 COMPOSITE=$WRK/bin/sum_Col_CDT.pl
 ## determin output
 [ -d logs ] || mkdir logs
-[ -d $WRK/Library/F4e ] || mkdir -p $WRK/Library/F4e
-[ -d $WRK/Library/E15 ] || mkdir -p $WRK/Library/E15
-[ -d $WRK/Library/E14a ] || mkdir -p $WRK/Library/E14a
-[ -d $WRK/Library/F5a ] || mkdir -p $WRK/Library/F5a
-cd $WRK/Library/F4e
+[ -d $WRK/Library/F5E ] || mkdir -p $WRK/Library/F5E
+[ -d $WRK/Library/E14 ] || mkdir -p $WRK/Library/E14
+
+cd $WRK/Library/F5E
 
 #make to TF_M1_adjNuc.csv and TF_M1_nearestTSS.csv
 
@@ -28,13 +27,14 @@ awk '{OFS="\t"} {print $4,$7,$30,$31,$32}' $WRK/05_Call_RefPT/TF_M1_nearestTSS_a
 
 python $WRK/bin/TFBS_TSS.py TF_M1_nearestTSS.csv
 
-$WRK/bin/plot_all_tf_phase_Nuc_pies.sh TFBS_phase_skew_ratios_Nuc.tsv TFBS_phase_counts_Nuc
+python $WRK/bin/plot_all_tf_phase_Nuc_pies.sh TFBS_phase_skew_ratios_Nuc.tsv TFBS_phase_counts_Nuc
 
-$WRK/bin/plot_all_tf_phase_TSS_pies.sh TFBS_phase_skew_ratios_TSS.tsv TFBS_phase_counts_TSS
+python $WRK/bin/plot_all_tf_phase_TSS_pies.sh TFBS_phase_skew_ratios_TSS.tsv TFBS_phase_counts_TSS
+
+## for TSS-Nuc, same logic with TFBS
 
 
-
-cd $WRK/Library/E15
+cd $WRK/Library/E14
 conda deactivate 
 conda activate bioinfo
 for file in $WRK/05_Call_RefPT/*_Occupancy_1bp.bed ; do
@@ -60,9 +60,9 @@ for file in $WRK/05_Call_RefPT/*_Occupancy_1bp.bed ; do
     rm ${TF}/TSS_1000bp.bed
 done
 
-cp -r $WRK/Library/F4e/TF-Nuc_pie_charts  $WRK/Library/E15
-cp -r $WRK/Library/F4e/TF-TSS_pie_charts  $WRK/Library/E15
-cp $WRK/Library/F4e/TFBS_strand_bias_ratios.tsv $WRK/Library/E15
+cp -r $WRK/Library/F5E/TF-Nuc_pie_charts  $WRK/Library/E14
+cp -r $WRK/Library/F5E/TF-TSS_pie_charts  $WRK/Library/E14
+cp $WRK/Library/F4e/TFBS_strand_bias_ratios.tsv $WRK/Library/E14
 
 cd $WRK/Library/E14a
 mkdir -p Heatmap 
@@ -77,6 +77,5 @@ for file in WDR5_Occupancy_1bp.bed   YY1_Occupancy_1bp.bed ; do
     rm ${TF}_M1_${Ref}_*.png ${TF}_M1_${Ref}_*.cdt
 done
 
-mv $WRK/Library/E14a/Heatmap/YY1_M1*.svg  $WRK/Library/F5a/Heatmap
 
 
