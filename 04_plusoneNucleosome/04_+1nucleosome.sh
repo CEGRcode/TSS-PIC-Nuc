@@ -20,6 +20,9 @@ Input=$WRK/data/BAM/BNase-seq_50U-10min_merge_hg38.bam
 NakedDNA=$WRK/data/BAM/NakedDNA_BNase-seq_0.04U_1_hg38.bam
 CoPROBAMFILE=$WRK/data/BAM/ENCFF663UAN_CoPRO_hg38.bam
 
+plusoneNucleosome=$WRK/04_plusoneNucleosome
+[ -d "$plusoneNucleosomer" ] || mkdir -p "$plusoneNucleosome"
+cd $plusoneNucleosome
 
 for file in ../03_core-promoter/TSS_all.bed ; do
     filename=$(basename "$file" .bed)
@@ -242,7 +245,7 @@ cat temp/+1Nuc_TSS_Divergent_*_read1_original_10x_+0.bed | bedtools sort -i | un
   cat temp/+1Nuc_TSS_Divergent_*_read1_original_10x_+9.bed | bedtools sort -i | uniq | bedtools shift -i - -g $Genome -p -2 -m +2 | awk '{OFS="\t"; print $1,$2,$3,$1"_"$2"_"$3,$5-2,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$37-$32}' > Adj+1Nuc_TSS_Divergent_up2.bed
 cat temp/+1Nuc_TSS_Divergent_*_read1_original_10x_+8.bed | bedtools sort -i | uniq | bedtools shift -i - -g $Genome -p -3 -m +3 |  awk '{OFS="\t"; print $1,$2,$3,$1"_"$2"_"$3,$5-3,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$36-$31}' > Adj+1Nuc_TSS_Divergent_up3.bed
   cat temp/+1Nuc_TSS_Divergent_*_read1_original_10x_+7.bed | bedtools sort -i | uniq | bedtools shift -i - -g $Genome -p -4 -m +4 |  awk '{OFS="\t"; print $1,$2,$3,$1"_"$2"_"$3,$5-4,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$35-$30}' > Adj+1Nuc_TSS_Divergent_up4.bed 
-cat temp/+1Nuc_TSS_Divergent_*_read1_original_nonunique_max.bed | bedtools sort -i | uniq | awk '{OFS="\t"; print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,0}' > Adj+1Nuc_Divergent_TSS_TSS_no10x.bed
+  cat temp/+1Nuc_TSS_Divergent_*_read1_original_nonunique_max.bed | bedtools sort -i | uniq | awk '{OFS="\t"; print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,0}' > Adj+1Nuc_Divergent_TSS_TSS_no10x.bed
 
 
  cat temp/+1Nuc_TSS_Reference_*_read1_original_10x_+1.bed | bedtools sort -i | uniq | awk '{OFS="\t"; print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29-$34}' > Adj+1Nuc_TSS_Reference_0.bed
@@ -259,6 +262,12 @@ cat temp/+1Nuc_TSS_Reference_*_read1_original_nonunique_max.bed | bedtools sort 
 
 cat Adj+1Nuc_TSS_Divergent_0.bed Adj+1Nuc_TSS_Divergent_down*.bed Adj+1Nuc_TSS_Divergent_up*.bed Adj+1Nuc_Divergent_TSS_TSS_no10x.bed | bedtools sort | uniq > Adj+1Nuc_TSS_Divergent.bed
 cat Adj+1Nuc_TSS_Reference_0.bed Adj+1Nuc_TSS_Reference_down*.bed Adj+1Nuc_TSS_Reference_up*.bed Adj+1Nuc_Reference_TSS_TSS_no10x.bed | bedtools sort | uniq > Adj+1Nuc_TSS_Reference.bed
+
+##check number
+echo "Adj+1Nuc_TSS_Divergent.bed : $(wc -l < Adj+1Nuc_TSS_Divergent.bed) sites"
+#Adj+1Nuc_TSS_Divergent.bed : 21922 sites
+echo "Adj+1Nuc_TSS_Reference.bed : $(wc -l < Adj+1Nuc_TSS_Reference.bed) sites"
+#Adj+1Nuc_TSS_Reference.bed : 25103 sites
 
 rm Adj+1Nuc_TSS_Divergent_0.bed Adj+1Nuc_TSS_Divergent_down*.bed Adj+1Nuc_TSS_Divergent_up*.bed Adj+1Nuc_Divergent_TSS_TSS_no10x.bed
 rm Adj+1Nuc_TSS_Reference_0.bed Adj+1Nuc_TSS_Reference_down*.bed Adj+1Nuc_TSS_Reference_up*.bed Adj+1Nuc_Reference_TSS_TSS_no10x.bed
@@ -361,7 +370,7 @@ for file in SCORES/UniqNuc_+.bed SCORES/UniqNuc_-.bed; do
     cut -f 78-227 | \
     awk '{
         OFS = "\t";
-        print ($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148)-($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143);    
+        print ($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148)-($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$100+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143);    
     }' | \
     > "${filename}_SS_score_temp.txt"
     tail -n +2 SS_${filename}_150_sense_SCORES.out | awk '{ OFS = "\t"; if ($2 > 0) print $2; else print 1 }' > temp.out
@@ -380,7 +389,7 @@ for file in SCORES/UniqNuc_+.bed SCORES/UniqNuc_-.bed ; do
     cut -f 78-227 | \
     awk '{
         OFS = "\t";
-        print ($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143)-($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148);
+        print ($9+$19+$29+$39+$49+$60+$70+$80+$90+$100+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143)-($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148);
     }' | \
      > "${filename}_WW_score_temp.txt"
      tail -n +2 WW_${filename}_150_sense_SCORES.out | awk '{ OFS = "\t"; if ($2 > 0) print $2; else print 1 }' > temp.out
@@ -478,9 +487,15 @@ cat  UniqNuc_*.bed > test.bed
 
 bedtools sort -i test.bed | uniq | bedtools closest -a Adj+1Nuc_TSS_Reference.bed -b - -d -D a -s -t first | \
 awk '{OFS="\t"; print $7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$1,$2,$3,$4,$5,$6,$29,$36}' > TSS_Reference_Adj+1Nuc_Di.bed
-
 bedtools sort -i test.bed | uniq | bedtools closest -a Adj+1Nuc_TSS_Divergent.bed -b - -d -D a -s -t first  | \
 awk '{OFS="\t"; print $7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$1,$2,$3,$4,$5,$6,$29,$36}' > TSS_Divergent_Adj+1Nuc_Di.bed
+##check number
+echo "TSS_Reference_Adj+1Nuc_Di.bed : $(wc -l < TSS_Reference_Adj+1Nuc_Di.bed) sites"
+#TSS_Reference_Adj+1Nuc_Di.bed : 25103 sites
+echo "TSS_Divergent_Adj+1Nuc_Di.bed : $(wc -l < TSS_Divergent_Adj+1Nuc_Di.bed) sites"
+#TSS_Divergent_Adj+1Nuc_Di.bed : 21922 sites
+
+
 mkdir -p check
 mv UniqNuc_1.bed  UniqNuc_2.bed UniqNuc_10.bed UniqNuc_4.bed  UniqNuc_5.bed UniqNuc_6.bed UniqNuc_11.bed UniqNuc_7.bed UniqNuc_3.bed UniqNuc_8.bed UniqNuc_9.bed  UniqNuc_0.bed  UniqNuc_12.bed UniqNuc_13.bed UniqNuc_14.bed check/
 mv  *.out check
@@ -569,7 +584,7 @@ for file in check/UniqNuc_*.bed  ; do
     cut -f 78-227 | \
     awk '{
         OFS = "\t";
-        print ($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148)-($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143);
+        print ($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148)-($9+$19+$29+$39+$49+$60+$70+$80+$90+$100+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143);
     }' | \
     > "${filename}_SS_score_temp.txt"
     tail -n +2 SS_${filename}_150_sense_SCORES.out | awk '{ OFS = "\t"; if ($2 > 0) print $2; else print 1 }' > temp.out
@@ -588,7 +603,7 @@ for file in check/UniqNuc_*.bed ; do
     cut -f 78-227 | \
     awk '{
         OFS = "\t";
-        print ($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143)-($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148);
+        print ($9+$19+$29+$39+$49+$60+$70+$80+$90+$100+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143)-($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148);
     }' | \
      > "${filename}_WW_score_temp.txt"
      tail -n +2 WW_${filename}_150_sense_SCORES.out | awk '{ OFS = "\t"; if ($2 > 0) print $2; else print 1 }' > temp.out
@@ -707,25 +722,23 @@ rm lessDNAencode_Adj+1Nuc_TSS_1.bed
 
 mv *_noAdj+1Nuc_TSS.bed *_Adj+1Nuc_TSS.bed  SCORES/
 
-wc -l SCORES/*_Adj+1Nuc_TSS.bed
-    9379 SCORES/YRWS_Adj+1Nuc_TSS.bed
-    1745 SCORES/antiYRantiWS_Adj+1Nuc_TSS.bed
-    2425 SCORES/antiYRsameWS_Adj+1Nuc_TSS.bed
-   10725 SCORES/lessDNAencode_Adj+1Nuc_TSS.bed
-    4336 SCORES/lowYRsameWS_Adj+1Nuc_TSS.bed
-    7537 SCORES/sameYRantiWS_Adj+1Nuc_TSS.bed
-    5815 SCORES/sameYRlowWS_Adj+1Nuc_TSS.bed
-   41962 total
+ #   9095 SCORES/YRWS_Adj+1Nuc_TSS.bed
+  #   1696 SCORES/antiYRantiWS_Adj+1Nuc_TSS.bed
+   #  2361 SCORES/antiYRsameWS_Adj+1Nuc_TSS.bed
+  #  10395 SCORES/lessDNAencode_Adj+1Nuc_TSS.bed
+  #   4199 SCORES/lowYRsameWS_Adj+1Nuc_TSS.bed
+   #  7306 SCORES/sameYRantiWS_Adj+1Nuc_TSS.bed
+  #   5626 SCORES/sameYRlowWS_Adj+1Nuc_TSS.bed
+   #   40678 total
 wc -l SCORES/*_noAdj+1Nuc_TSS.bed
-     568 SCORES/YRWS_noAdj+1Nuc_TSS.bed
-     614 SCORES/antiYRantiWS_noAdj+1Nuc_TSS.bed
-     420 SCORES/antiYRsameWS_noAdj+1Nuc_TSS.bed
-    1539 SCORES/lessDNAencode_noAdj+1Nuc_TSS.bed
-     435 SCORES/lowYRsameWS_noAdj+1Nuc_TSS.bed
-    1030 SCORES/sameYRantiWS_noAdj+1Nuc_TSS.bed
-     457 SCORES/sameYRlowWS_noAdj+1Nuc_TSS.bed
-    5063 total
-
+  #   548 SCORES/YRWS_noAdj+1Nuc_TSS.bed
+  #   591 SCORES/antiYRantiWS_noAdj+1Nuc_TSS.bed
+  #   403 SCORES/antiYRsameWS_noAdj+1Nuc_TSS.bed
+   #  1477 SCORES/lessDNAencode_noAdj+1Nuc_TSS.bed
+   #  419 SCORES/lowYRsameWS_noAdj+1Nuc_TSS.bed
+    # 988 SCORES/sameYRantiWS_noAdj+1Nuc_TSS.bed
+    # 444 SCORES/sameYRlowWS_noAdj+1Nuc_TSS.bed
+   # 4870 total
 ## Conservation score
 
 for file in SCORES/*_Adj+1Nuc_TSS.bed SCORES/*_noAdj+1Nuc_TSS.bed ; do
@@ -851,7 +864,7 @@ for file in SCORES/*_Adj+1Nuc_TSS.bed SCORES/*_noAdj+1Nuc_TSS.bed ; do
     cut -f 78-227 | \
     awk '{
         OFS = "\t";
-        print ($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148)-($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143);
+        print ($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148)-($9+$19+$29+$39+$49+$60+$70+$80+$90+$100+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143);
     }' | \
     > "${filename}_SS_score_temp.txt"
     tail -n +2 SCORES/SS_${filename}_150_sense_SCORES.out | awk '{ OFS = "\t"; if ($2 > 0) print $2; else print 1 }' > temp.out
@@ -870,7 +883,7 @@ for file in SCORES/*_Adj+1Nuc_TSS.bed SCORES/*_noAdj+1Nuc_TSS.bed ; do
     cut -f 78-227 | \
     awk '{
         OFS = "\t";
-        print ($9+$19+$29+$39+$49+$60+$70+$80+$90+$101+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143)-($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148);
+        print ($9+$19+$29+$39+$49+$60+$70+$80+$90+$100+$111+$121+$131+$141+$10+$20+$30+$40+$50+$61+$71+$81+$91+$101+$112+$122+$132+$142+$11+$21+$31+$41+$51+$62+$72+$82+$92+$102+$113+$123+$133+$143)-($4+$14+$24+$34+$44+$55+$65+$75+$85+$95+$106+$116+$126+$136+$146+$5+$15+$25+$35+$45+$56+$66+$76+$86+$96+$107+$117+$127+$137+$147+$6+$16+$26+$36+$46+$57+$67+$77+$87+$97+$108+$118+$128+$138+$148);
     }' | \
      > "${filename}_WW_score_temp.txt"
      tail -n +2 SCORES/WW_${filename}_150_sense_SCORES.out | awk '{ OFS = "\t"; if ($2 > 0) print $2; else print 1 }' > temp.out
@@ -921,6 +934,9 @@ mv *_means.out SCORES/
 cat  sameYRlowWS_Adj+1Nuc_TSS_*score.bed lowYRsameWS_Adj+1Nuc_TSS_*score.bed YRWS_Adj+1Nuc_TSS_*score.bed   antiYRsameWS_Adj+1Nuc_TSS_*score.bed antiYRantiWS_Adj+1Nuc_TSS_*score.bed sameYRantiWS_Adj+1Nuc_TSS_*score.bed lessDNAencode_Adj+1Nuc_TSS_*score.bed  YRWS_noAdj+1Nuc_TSS_*score.bed sameYRlowWS_noAdj+1Nuc_TSS_*score.bed lowYRsameWS_noAdj+1Nuc_TSS_*score.bed sameYRantiWS_noAdj+1Nuc_TSS_*score.bed  antiYRsameWS_noAdj+1Nuc_TSS_*score.bed antiYRantiWS_noAdj+1Nuc_TSS_*score.bed lessDNAencode_noAdj+1Nuc_TSS_*score.bed > Adj+1Nuc_TSS_all.bed
 rm YRWS_Adj+1Nuc_TSS_*score.bed sameYRlowWS_Adj+1Nuc_TSS_*score.bed lowYRsameWS_Adj+1Nuc_TSS_*score.bed sameYRantiWS_Adj+1Nuc_TSS_*score.bed  antiYRsameWS_Adj+1Nuc_TSS_*score.bed antiYRantiWS_Adj+1Nuc_TSS_*score.bed lessDNAencode_Adj+1Nuc_TSS_*score.bed  YRWS_noAdj+1Nuc_TSS_*score.bed sameYRlowWS_noAdj+1Nuc_TSS_*score.bed lowYRsameWS_noAdj+1Nuc_TSS_*score.bed sameYRantiWS_noAdj+1Nuc_TSS_*score.bed  antiYRsameWS_noAdj+1Nuc_TSS_*score.bed antiYRantiWS_noAdj+1Nuc_TSS_*score.bed lessDNAencode_noAdj+1Nuc_TSS_*score.bed
 
+##check number
+echo "Adj+1Nuc_TSS_all.bed : $(wc -l < Adj+1Nuc_TSS_all.bed) sites"
+#Adj+1Nuc_TSS_all.bed : 45547  sites
 
 ## add phase 
 
@@ -939,17 +955,17 @@ rm YRWS_Adj+1Nuc_TSS_*score.bed sameYRlowWS_Adj+1Nuc_TSS_*score.bed lowYRsameWS_
 
 wc -l Adj+1Nuc_TSS_phase*.bed
 
-    4944 Adj+1Nuc_TSS_phase0.bed
-    5039 Adj+1Nuc_TSS_phase1.bed
-    4926 Adj+1Nuc_TSS_phase2.bed
-    4749 Adj+1Nuc_TSS_phase3.bed
-    4400 Adj+1Nuc_TSS_phase4.bed
-    4160 Adj+1Nuc_TSS_phase5.bed
-    4196 Adj+1Nuc_TSS_phase6.bed
-    4106 Adj+1Nuc_TSS_phase7.bed
-    4342 Adj+1Nuc_TSS_phase8.bed
-    4686 Adj+1Nuc_TSS_phase9.bed
-   45548 total
+ #   4944 Adj+1Nuc_TSS_phase0.bed
+  #  5039 Adj+1Nuc_TSS_phase1.bed
+  #  4926 Adj+1Nuc_TSS_phase2.bed
+  #  4749 Adj+1Nuc_TSS_phase3.bed
+ #   4400 Adj+1Nuc_TSS_phase4.bed
+  #  4160 Adj+1Nuc_TSS_phase5.bed
+  #  4196 Adj+1Nuc_TSS_phase6.bed
+  #  4106 Adj+1Nuc_TSS_phase7.bed
+  #  4342 Adj+1Nuc_TSS_phase8.bed
+  #  4686 Adj+1Nuc_TSS_phase9.bed
+   # 45548 total
 
 awk '{OFS="\t"; print $9,$10,$11,$12,$13,$14,$15,$16"_phase1",$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$1,$2,$3,$4,$5,$6,$7,$8,$31,$32,$33,$34,$35}' Adj+1Nuc_TSS_phase1.bed | sort -k27,27n > TSS_phase1_adj+1Nuc.bed
 awk '{OFS="\t"; print $9,$10,$11,$12,$13,$14,$15,$16"_phase2",$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$1,$2,$3,$4,$5,$6,$7,$8,$31,$32,$33,$34,$35}' Adj+1Nuc_TSS_phase2.bed | sort -k27,27n > TSS_phase2_adj+1Nuc.bed
@@ -970,7 +986,7 @@ cat  temp/TSS_phase*_adj+1Nuc.bed | bedtools sort -i | uniq > TSS_all_phase_adj+
 awk '{OFS="\t"; print $23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22}' TSS_all_phase_adj+1Nuc_Di.bed | bedtools sort -i | uniq | \
 > Adj+1Nuc_Di_TSS_all_phase.bed
 
-## seperate each group by phase
+## seperate each group by phase, and only take the distance to TSS from 40 to 160. 
 
 cat temp/TSS_phase9_adj+1Nuc.bed temp/TSS_phase0_adj+1Nuc.bed temp/TSS_phase1_adj+1Nuc.bed temp/TSS_phase2_adj+1Nuc.bed temp/TSS_phase3_adj+1Nuc.bed temp/TSS_phase4_adj+1Nuc.bed temp/TSS_phase5_adj+1Nuc.bed temp/TSS_phase6_adj+1Nuc.bed temp/TSS_phase7_adj+1Nuc.bed temp/TSS_phase8_adj+1Nuc.bed | \
 awk  '{ if ( $27 >=40 && $27 <=160 && $29 != "0" ) { print $0 > ("TSS_allphase_adj+1Nuc.bed")
@@ -981,19 +997,6 @@ awk '{OFS="\t"; print $17,$18,$19,$20,$21,$22,$1,$2,$3,$4,$5,$6,$7,$8}' TSS_allp
 wc -l adj+1Nuc_allphase_TSS.bed
  27838 adj+1Nuc_allphase_TSS.bed
 
-wc -l temp/TSS_phase*_adj+1Nuc.bed
-    4944 temp/TSS_phase0_adj+1Nuc.bed
-    5039 temp/TSS_phase1_adj+1Nuc.bed
-    4926 temp/TSS_phase2_adj+1Nuc.bed
-    4749 temp/TSS_phase3_adj+1Nuc.bed
-    4400 temp/TSS_phase4_adj+1Nuc.bed
-    4160 temp/TSS_phase5_adj+1Nuc.bed
-    4196 temp/TSS_phase6_adj+1Nuc.bed
-    4106 temp/TSS_phase7_adj+1Nuc.bed
-    4342 temp/TSS_phase8_adj+1Nuc.bed
-    4686 temp/TSS_phase9_adj+1Nuc.bed
-
-
 ## choose  phase 1 and phase 6 out, plot CoPRO and DNA encoding
 
 awk  '{ if (  $21 ~ /phase1/ || $21 ~ /phase9/ || $21 ~ /phase0/ || $21 ~ /phase2/ || $21 ~ /phase3/ ) { print $0 > ("adj+1Nuc_phase93.bed")
@@ -1002,9 +1005,13 @@ awk  '{ if (  $21 ~ /phase1/ || $21 ~ /phase9/ || $21 ~ /phase0/ || $21 ~ /phase
 awk  '{ if (  $21 ~ /phase4/ || $21 ~ /phase5/ || $21 ~ /phase6/ || $21 ~ /phase7/ || $21 ~ /phase8/ ) { print $0 > ("adj+1Nuc_phase48.bed")
      }  }'  adj+1Nuc_allphase_TSS.bed
 
-bedtools intersect -v -a adj+1Nuc_allphase_TSS.bed -b adj+1Nuc_phase93.bed > adj+1Nuc_phase48.bed 
+##check number
+echo "adj+1Nuc_phase93.bed : $(wc -l < adj+1Nuc_phase93.bed) sites"
+#adj+1Nuc_phase93.bed : 15137 sites
+echo "adj+1Nuc_phase48.bed : $(wc -l < adj+1Nuc_phase48.bed) sites"
+#adj+1Nuc_phase48.bed : 12701 sites
 
-######## +2 nucleosome and random nucleosome
+######## +2 nucleosome and random nucleosome (not yet re-test)
 awk 'BEGIN{OFS="\t"} {print $1, $2, $3, $4, "0", $6}' +1Nuc_TSS_all.bed | bedtools sort -i - | uniq | bedtools closest -a - -b "$Nuc" -iu -io -d -D a -t first \
 | awk 'BEGIN{OFS="\t"} {print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $6, $13}' \
 | awk 'BEGIN{OFS="\t"} $8 != "-1" {print}' > "+1Nuc_+2Nuc.bed"
@@ -1304,7 +1311,3 @@ cat rNuc_0.bed rNuc_down*.bed rNuc_up*.bed rNuc_no10x.bed | awk '{
 bedtools sort -i test.bed | uniq > AdjrNuc.bed
 
 rm  rNuc_0.bed rNuc_down*.bed rNuc_up*.bed rNuc_no10x.bed
-
-
-
-
