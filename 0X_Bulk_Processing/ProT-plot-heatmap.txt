@@ -1,9 +1,10 @@
-Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 			F2a
-Reference/TSS_noTATA_1_1000bp.bed				F2a
-Reference/TSS_noTATA_2_1000bp.bed				F2a
-Reference/TSS_noTATA_3_1000bp.bed				F2a
-Reference/TSS_noTATA_4_1000bp.bed				F2a
-Reference/TSS_TATA_oppo_1000bp.bed				F2a
-Reference/TSS_TATA_same_1000bp.bed				F2a
+Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 			F2A
+Reference/TSS_noTATA_1_1000bp.bed				F2A
+Reference/TSS_noTATA_2_1000bp.bed				F2A
+Reference/TSS_noTATA_3_1000bp.bed				F2A
+Reference/TSS_noTATA_4_1000bp.bed				F2A
+Reference/TSS_TATA_oppo_1000bp.bed				F2A
+Reference/TSS_TATA_same_1000bp.bed				F2A
+Reference/TSS_noTATA_all_1000bp.bed				F2A
 
 

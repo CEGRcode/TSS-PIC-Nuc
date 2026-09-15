@@ -1,6 +1,6 @@
-Reference/Adj+1Nuc_TSS_all_250bp.bed		YY	0.5	0000FF	E7
-Reference/Adj+1Nuc_TSS_all_250bp.bed		RR	0.5	FF0000  E7
-Reference/Adj+1Nuc_TSS_all_250bp.bed		WW	0.3	2EFE99	E7
-Reference/Adj+1Nuc_TSS_all_250bp.bed		SS	0.3	AB7400	E7
+Reference/Adj+1Nuc_TSS_all_250bp.bed		YY	0.5	0000FF	S7
+Reference/Adj+1Nuc_TSS_all_250bp.bed		RR	0.5	FF0000  S7
+Reference/Adj+1Nuc_TSS_all_250bp.bed		WW	0.3	2EFE99	S7
+Reference/Adj+1Nuc_TSS_all_250bp.bed		SS	0.3	AB7400	S7
 
 

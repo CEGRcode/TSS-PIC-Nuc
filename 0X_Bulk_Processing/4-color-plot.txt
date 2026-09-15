@@ -1,8 +1,8 @@
-Reference/TSS_4color_up1_6bp.bed			 F1b
-Reference/TATA_TSS-strand_tsssort_down20bp_60bp.bed	 F1c
-Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 		 F2a
-Reference/WDR5_Occupancy_32bp.bed		         E13a
-Reference/YY1_Occupancy_32bp.bed		         E16
-Reference/SP1_Occupancy_32bp.bed		         E18a
-Reference/GABPA_Occupancy_32bp.bed		         E18b
-Reference/NFYC_Occupancy_32bp.bed		         E18c
+Reference/TSS_4color_up1_6bp.bed			 F1B
+Reference/TATA_TSS-strand_tsssort_down20bp_60bp.bed	 F1C
+Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 		 F2A
+Reference/WDR5_Occupancy_32bp.bed		         S13A
+Reference/YY1_Occupancy_32bp.bed		         S15A
+Reference/SP1_Occupancy_32bp.bed		         S16A
+Reference/GABPA_Occupancy_32bp.bed		         S16A
+Reference/NFYC_Occupancy_32bp.bed		         S16A

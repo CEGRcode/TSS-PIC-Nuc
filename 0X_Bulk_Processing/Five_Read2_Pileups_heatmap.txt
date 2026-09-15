@@ -1,6 +1,6 @@
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/TSS_4color_up1_6bp.bed 			F1b 
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/TATA_TSS-strand_tsssort_down20bp_60bp.bed	F1c
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bamm   	Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 		F2a
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam 		Reference/adj+1Nuc_allphase_TSS_up100_120bp.bed		F4d
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam 		Reference/nearestTSS_YY1_M1_same-oppo_500bp.bed		F5a
-NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/nearestTSS_WDR5_M1_same-oppo_500bp.bed	E14a
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/TSS_4color_up1_6bp.bed 			F1B
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/TATA_TSS-strand_tsssort_down20bp_60bp.bed	F1C 
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam   	Reference/TSS_TATAsame_oppo_noTATA_200bp.bed 		F2A
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam 		Reference/adj+1Nuc_allphase_TSS_up100_120bp.bed		F5D
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam 		Reference/nearestTSS_YY1_M1_same-oppo_500bp.bed		F6A
+NaN	NaN	NaN	NaN	../data/BAM/ENCFF663UAN_CoPRO_hg38.bam		Reference/nearestTSS_WDR5_M1_same-oppo_500bp.bed	S13B
