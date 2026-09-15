@@ -11,17 +11,17 @@ COMPOSITEFILTER=$WRK/bin/sum_Col_CDT_filter.pl
 COMPOSITE=$WRK/bin/sum_Col_CDT.pl
 ## determin output
 [ -d logs ] || mkdir logs
-[ -d $WRK/Library/F5h ] || mkdir -p $WRK/Library/F5h
+[ -d $WRK/Library/F7E ] || mkdir -p $WRK/Library/F7E
 
-cd $WRK/Library/F5h
-NFYC_Occupancy_1bp.bed
-for file in   SP1_Occupancy_1bp.bed GABPA_Occupancy_1bp.bed ; do
+cd $WRK/Library/F7E
+
+for file in NFYC_Occupancy_1bp.bed  SP1_Occupancy_1bp.bed GABPA_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
     filename=$(basename "$file" "_1bp.bed")
     TFBAM=$BAMDIR/K562_${TF}_BX_rep1_hg38.bam
     BAM=K562_${TF}_BX_rep1_hg38.bam
     FACTOR=`grep 'Scaling factor' $NormDIR/K562_${TF}_BX_rep1_hg38_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
-    mkdir -p $WRK/Library/F5h/${TF}
+    mkdir -p $WRK/Library/F7E/${TF}
     bedtools sort -i $WRK/05_Call_RefPT/${TF}/TSS_same_${TF}_M1_TATA.bed > ${TF}/TSS_same_${TF}_M1_TATA_sort.bed
     bedtools intersect -u -a $WRK/04_plusoneNucleosome/TSS_all_phase_adj+1Nuc_Di.bed -b  ${TF}/TSS_same_${TF}_M1_TATA_sort.bed | \
     awk '{OFS="\t"} { print $17,$18,$19,$20,$21,$22,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16}' > ${TF}/TATA_TSS_same_${TF}_M1_sort.bed
@@ -78,8 +78,6 @@ for file in NFYC_Occupancy_1bp.bed  SP1_Occupancy_1bp.bed GABPA_Occupancy_1bp.be
 
     paste ${TF}/*_TBP_*_noTATA_TSS_same_${TF}_M1_40bp_read1_combined_SCORES.out  ${TF}/*_TBP_*_${TF}_M1_TSS_same_noTATA_40bp_read1_combined_SCORES.out ${TF}/*_GTF2A1_*_noTATA_TSS_same_${TF}_M1_40bp_read1_combined_SCORES.out ${TF}/*_GTF2A1_*_${TF}_M1_TSS_same_noTATA_40bp_read1_combined_SCORES.out ${TF}/*_GTF2B_*_noTATA_TSS_same_${TF}_M1_40bp_read1_combined_SCORES.out ${TF}/*_GTF2B_*_${TF}_M1_TSS_same_noTATA_40bp_read1_combined_SCORES.out  ${TF}/*_Taf4_*_noTATA_TSS_same_${TF}_M1_40bp_read1_combined_SCORES.out ${TF}/*_Taf4_*_${TF}_M1_TSS_same_noTATA_40bp_read1_combined_SCORES.out | \
     tail -n +2  | cut -f  2,4,6,8,10,12,14,16  | paste ${TF}/${TF}_M1_TSS_same_noTATA_sort.bed - > ${TF}/${TF}_M1_TSS_same_noTATA_sort_score.bed
-
-
 done
     rm *_40bp.bed
 
