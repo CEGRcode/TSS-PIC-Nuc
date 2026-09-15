@@ -19,9 +19,9 @@ GTF2AFACTOR=`grep 'Scaling factor' $NormDIR/K562_GTF2A1_BX_rep1_hg38_NCISb_Scali
 ## Determine output
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-[ -d $WRK/Library/F1c ] || mkdir -p $WRK/Library/F1c
+[ -d $WRK/Library/F1C ] || mkdir -p $WRK/Library/F1C
 
-cd $WRK/Library/F1c
+cd $WRK/Library/F1C
 
 
 ## GET TATA box distance and TBP/TFIIA occupancy info
@@ -114,10 +114,10 @@ cat  $WRK/03_core-promoter/TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed $WRK
 input="TSS_first_second_sameTATA.bed"
 filename=$(basename "$input" .bed)
 
-# 1️⃣ Split into separate distance files (-56 to -6)
+# 1️⃣ Split into separate distance files (-46 to -6)
 awk -v filename="$filename" '{
     distance = $22 + 0  # Ensure numeric
-    if (distance >= -56 && distance <= -6) {
+    if (distance >= -46 && distance <= -6) {
         print $0 >> (filename"_"distance".bed")
     }
 }' "$input"
@@ -139,7 +139,56 @@ sort -t_ -k4,4n "$out" -o "$out"
 
 echo "✅ Report written to $out"
 
-rm TSS_first_second_sameTATA_*.bed TSS_first_second_sameTATA.bed
+rm TSS_first_second_sameTATA_*.bed 
+
+sort -k22,22n TSS_first_second_sameTATA.bed | awk '{if ( $22 >= -31 && $22 <= -21 ) print $0 > "TSS_fixTATA.bed" ; else if ( $22 >= -46 && $22 <= -31 ) print $0 > "TSS_nonfixTATA_1.bed" ; else if ( $22 >= -21 && $22 <= -6 ) print $0 > "TSS_nonfixTATA_2.bed"   }'
+sort -k22,22n TSS_first_second_sameTATA.bed | awk '{OFS="\t"} {print $16,$17,$18,$19,$20,$21,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$22 }'  >  TATA_TSS_first_second_same_sort.bed
+
+awk -v filename="TATA_TSS_first_second_same" '{
+    distance = $22 + 0  # Ensure numeric
+    if (distance >= -46 && distance <= -6) {
+        print $0 >> (filename"_"distance".bed")
+    }
+}' TATA_TSS_first_second_same_sort.bed
+
+
+
+for file in TATA_TSS_first_second_same_*.bed ; do
+  BED=$(basename "$file" ".bed")
+  java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 200 $file -o ${BED}_200bp.bed
+  java -jar "$SCRIPTMANAGER" read-analysis tag-pileup ${BED}_200bp.bed $TBP --cpu 4 -1 -o TBP_${BED}_read1_200bp.out
+  java -jar "$SCRIPTMANAGER" read-analysis scale-matrix -r 1 -l 1 TBP_${BED}_read1_200bp.out -s "$TBPFACTOR" -o TBP_${BED}_read1_200bp_Normalized.out
+  java -jar "$SCRIPTMANAGER" read-analysis tag-pileup ${BED}_200bp.bed $GTF2A --cpu 4 -1 -o GTF2A_${BED}_read1_200bp.out
+  java -jar "$SCRIPTMANAGER" read-analysis scale-matrix -r 1 -l 1 GTF2A_${BED}_read1_200bp.out -s "$GTF2AFACTOR" -o GTF2A_${BED}_read1_200bp_Normalized.out
+  rm GTF2A_${BED}_read1_200bp.out
+  rm TBP_${BED}_read1_200bp.out
+  java -jar "$SCRIPTMANAGER" read-analysis tag-pileup ${BED}_200bp.bed $CoPRO --cpu 4 -2 -o CoPRO_${BED}_read2_200bp.out
+  rm ${BED}_200bp.bed
+done
+
+
+# Pileup (read 1)
+
+for file in TATA_TSS_first_second_same_sort.bed ; do
+  BED=$(basename "$file" ".bed")
+  java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 100 $file -o ${BED}_100bp.bed
+  java -jar "$SCRIPTMANAGER" read-analysis tag-pileup ${BED}_100bp.bed $TBP --cpu 4 -1 -M TBP_${BED}_read1_100bp
+  java -jar "$SCRIPTMANAGER" read-analysis scale-matrix  TBP_${BED}_read1_100bp_sense.cdt -s "$TBPFACTOR" -o TBP_${BED}_read1_100bp_sense_Normalized.cdt
+  java -jar "$SCRIPTMANAGER" read-analysis scale-matrix TBP_${BED}_read1_100bp_anti.cdt -s "$TBPFACTOR" -o TBP_${BED}_read1_100bp_anti_Normalized.cdt
+  java -jar  $SCRIPTMANAGER figure-generation heatmap  --blue TBP_${BED}_read1_100bp_sense_Normalized.cdt -o  TBP_${BED}_read1_100bp_sense_treeview.png
+  java -jar  $SCRIPTMANAGER figure-generation heatmap  --red TBP_${BED}_read1_100bp_anti_Normalized.cdt -o  TBP_${BED}_read1_100bp_anti_treeview.png
+  java -jar "$SCRIPTMANAGER" read-analysis tag-pileup ${BED}_100bp.bed $CoPRO --cpu 4 -2 -M CoPRO_${BED}_read2_100bp
+  java -jar  $SCRIPTMANAGER figure-generation heatmap  --blue CoPRO_${BED}_read2_100bp_sense.cdt -o  CoPRO_${BED}_read2_100bp_sense.png
+  java -jar  $SCRIPTMANAGER figure-generation heatmap  --red CoPRO_${BED}_read2_100bp_anti.cdt -o  CoPRO_${BED}_read2_100bp_anti.png
+  java -jar $SCRIPTMANAGER figure-generation merge-heatmap TBP_${BED}_read1_100bp_sense_treeview.png TBP_${BED}_read1_100bp_anti_treeview.png -o TBP_${BED}_read1_100bp_merge.png
+  java -jar  $SCRIPTMANAGER figure-generation merge-heatmap CoPRO_${BED}_read2_100bp_sense.png CoPRO_${BED}_read2_100bp_anti.png -o CoPRO_${BED}_read2_100bp_merge.png
+  java -jar $SCRIPTMANAGER figure-generation label-heatmap  CoPRO_${BED}_read2_100bp_merge.png -l -50 -m 0 -r 50 -w 1 -f 20 -o CoPRO_${BED}_read2_100bp.svg
+  java -jar $SCRIPTMANAGER figure-generation label-heatmap  TBP_${BED}_read1_100bp_merge.png -l -50 -m 0 -r 50 -w 1 -f 20 -o TBP_${BED}_read1_100bp.svg
+  #rm TBP_${BED}_read1_100bp_sense_treeview.png TBP_${BED}_read1_100bp_anti_treeview.png
+  #rm CoPRO_${BED}_read2_100bp_sense.png CoPRO_${BED}_read2_100bp_anti.png
+  #rm  TBP_${BED}_read1_100bp_*.cdt CoPRO_${BED}_read2_100bp_*.cdt
+  rm ${BED}_100bp.bed
+done
 
 
 
