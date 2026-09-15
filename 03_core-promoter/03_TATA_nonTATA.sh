@@ -28,9 +28,10 @@ NormDir=$WRK/data/NormalizationFactors
 RNABAM=$WRK/data/BAM/*_Grocap_*.bam
 CoPROBAMFILE=$WRK/data/BAM/ENCFF663UAN_CoPRO_hg38.bam
 TBP=$WRK/data/BAM/*_TBP_hg38.bam
-TFIIA=$WRK/data/BAM/*_GTFIIA1_hg38.bam
+TFIIA=$WRK/data/BAM/*_GTF2A1_hg38.bam
 TBPFACTOR=`grep 'Scaling factor' $NormDir/*_TBP_*_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
-GTF2AFACTOR=`grep 'Scaling factor' $NormDir/*_GTFIIA1_*_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
+GTF2AFACTOR=`grep 'Scaling factor' $NormDir/*_GTF2A1_*_NCISb_ScalingFactors.out | awk -F" " '{print $3}'`
+TSSBED=$WRK/02_TSS_NFR/TSS_center_TU_PIC.bed
 
 ## Determine core-promoter (TATA and TATA-less) location to each TSS
 corepromoter=$WRK/03_core-promoter
@@ -44,9 +45,11 @@ java -jar $SCRIPTMANAGER sequence-analysis search-motif -m TATAWAWR -n 2 -o TATA
 # lable it with 0 or 1 2 Mismatch
 cat ../02_TSS_NFR/center_TU_TSS-PIC.bed | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6}' | bedtools intersect -u -a TATAWAWR_2Mismatch_hg38.bed -b - | \
 bedtools intersect -v -a - -b $BLACKLIST | bedtools sort -i | uniq > TATAWAWR.bed 
-wc -l TATAWAWR.bed
-250406 TATAWAWR.bed
+##check number
+echo "ATAWAWR.bed : $(wc -l < TATAWAWR.bed) sites"
+#ATAWAWR.bed : 250406 sites
 
+## TATA box that around TSS region, just get the rough pattern of TSS around TATA box. found the best signal is at +27 and -26
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1 TATAWAWR.bed -o TATAWAWR_1bp.bed
 
 bedtools sort -i $TSSBED | bedtools closest -a - -b TATAWAWR_1bp.bed -id -s -d -D a -t first  | awk '{OFS="\t"} {print $7,$8,$9,$10,$11,$12,$1,$2,$3,$4,$5,$6,$13}' | \
@@ -54,12 +57,12 @@ awk '{ if (($13 > -100 ) && ($2 != "-1" )) print $0 > "TATAWAWR_codingTSS.bed" }
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 100 TATAWAWR_codingTSS.bed -o TATAWAWR_codingTSS_100bp.bed
 java -jar "$SCRIPTMANAGER" read-analysis tag-pileup TATAWAWR_codingTSS_100bp.bed "$CoPROBAMFILE" -2 --cpu 4 -o CoPRO_TATAWAWR_codingTSS_100bp_read2.out
 rm TATAWAWR_codingTSS_100bp.bed TATAWAWR_codingTSS.bed
-
+### take the calculate TATA box initiation ability by calculating TSS signal at cononical location
 for file in TATAWAWR_1bp.bed ; do
     filename=$(basename "$file" ".bed")
     # shift to down 27
     bedtools shift -i $file -g $Genome -p 27 -m -27 > ${filename}_down27.bed
-    # shift to up 27
+    # shift to up 26
     bedtools shift -i $file -g $Genome -p -26 -m 26 > ${filename}_up26.bed
     #eampand
     java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 12 ${filename}_down27.bed -o ${filename}_down27_12.bed
@@ -81,17 +84,21 @@ for file in TATAWAWR_1bp.bed ; do
     rm ${filename}_down27_12.bed ${filename}_up27_12.bed ${filename}_down27.bed  ${filename}_up27.bed
 done
 
-
+## determine the orientation of TATA box ( is downstream sense signal stronger than upstream opposite signal, seperate by mismatch)
 awk '{ if ($5 == "2") print $0 > "TATAWAWR_2mis_sense_anti.bed" ; else if ($5 == "1") print $0 > "TATAWAWR_1mis_sense_anti.bed" ; else print $0 > "TATAWAWR_0mis_sense_anti.bed" }' SCORES/TATAWAWR_1bp_sense_anti.bed
 
 awk '{ if (($7 > $8 ) && ($7 > 2 )) print $0 > "TATAWAWR_0mis_same.bed" ; else if (($7 < $8 ) && ($8 > 2 )) print $0 > "TATAWAWR_0mis_oppo.bed" }' TATAWAWR_0mis_sense_anti.bed
 awk '{ if (($7 > $8 ) && ($7 > 2 )) print $0 > "TATAWAWR_1mis_same.bed" ; else if (($7 < $8 ) && ($8 > 2 )) print $0 > "TATAWAWR_1mis_oppo.bed" }' TATAWAWR_1mis_sense_anti.bed
 awk '{ if (($7 > $8 ) && ($7 > 2 )) print $0 > "TATAWAWR_2mis_same.bed" ; else if (($7 < $8 ) && ($8 > 2 )) print $0 > "TATAWAWR_2mis_oppo.bed" }' TATAWAWR_2mis_sense_anti.bed
 
-
+## only take tss at promoter and enhancer region for later analysis
 cat ../02_TSS_NFR/TSS_center_TU_PIC.bed | awk '{ if (($14 ~ /Enhancer/ ) || ($14 ~ /Promoter/ )) print $0 > "TSS_oriabove_EP_TU_Uniq_Alter.bed" }' 
 
-## take second TSS
+##check number
+echo "TSS_oriabove_EP_TU_Uniq_Alter.bed : $(wc -l < TSS_oriabove_EP_TU_Uniq_Alter.bed) sites"
+#TSS_oriabove_EP_TU_Uniq_Alter.be : 51385 sites
+
+## take second TSS in enhancer or in promoter because TATA box may also associated with second TSS, those TSS could at ref strand or at divergent strand:
 cat ../02_TSS_NFR/Second_TSS_NFR_Nuc.bed | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10}'| bedtools closest -a - -b TSS_oriabove_EP_TU_Uniq_Alter.bed -s -io -t first | awk '{if (($2 > $19) && ($2 < $20) && ($6 == $23)) print $0 > "temp.bed" ; else if (($2 > $19) && ($2 < $20)) print $0 > "temp2.bed" }'
 awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7,$8"_Refside",$9,$10,$1"_"$9"_"$10,$10-$9,$23,$24,$12}' temp.bed  > Second_TSS_NFR_Nuc_1.bed
 awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7,$8"_Divside",$9,$10,$1"_"$9"_"$10,$10-$9,$23,$24,$12}' temp2.bed  > Second_TSS_NFR_Nuc_2.bed
@@ -100,12 +107,16 @@ rm temp.bed temp2.bed
 cat Second_TSS_NFR_Nuc_1.bed Second_TSS_NFR_Nuc_2.bed | bedtools sort -i | uniq > Second_TSS_oriabove_EP_TU_FirstTSS.bed
 rm Second_TSS_NFR_Nuc_1.bed Second_TSS_NFR_Nuc_2.bed
 
+##check number
+echo "Second_TSS_oriabove_EP_TU_FirstTSS.bed : $(wc -l < Second_TSS_oriabove_EP_TU_FirstTSS.bed) sites"
+#Second_TSS_oriabove_EP_TU_FirstTSS.bed : 31213 sites
+
 ## associat each TATA box to TSS
 cat TATAWAWR_0mis_same.bed TATAWAWR_1mis_same.bed TATAWAWR_2mis_same.bed | bedtools shift -i - -g $Genome -p 27 -m -27 | bedtools sort -i | uniq > TATAWAWR_same_downstream27.bed
 cat TATAWAWR_0mis_same.bed TATAWAWR_1mis_same.bed TATAWAWR_2mis_same.bed | bedtools sort -i | uniq > TATAWAWR_same.bed
 
 java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 12 TATAWAWR_same_downstream27.bed -o TATAWAWR_same_downstream27_12bp.bed
-
+## any TSS location contribute to the initiation score of TATA box
 cat TSS_oriabove_EP_TU_Uniq_Alter.bed  Second_TSS_oriabove_EP_TU_FirstTSS.bed | bedtools intersect -u -a - -b TATAWAWR_same_downstream27_12bp.bed | \
 bedtools sort -i | uniq | bedtools closest -a - -b TATAWAWR_same.bed -s -id -io -d -D a | awk '{ if (($24 <= -21 ) && ($24 >= -31 )) print $0 > "TSS_all_TATA_same.bed" }' 
 rm TATAWAWR_same_downstream27.bed TATAWAWR_same_downstream27_12bp.bed
@@ -118,8 +129,28 @@ bedtools intersect -v -a - -b TSS_all_TATA_same.bed | bedtools intersect -u -a -
 bedtools sort -i | uniq | bedtools closest -a - -b TATAWAWR_oppo.bed -S -id -io -d -D a | awk '{ if (($24 <= -21 ) && ($24 >= -31 )) print $0 > "TSS_all_TATA_oppo.bed" }' 
 
 rm TATAWAWR_same_upstream26.bed TATAWAWR_same_upstream26_12bp.bed
+
+## check number:
+echo "TATAWAWR_0mis_oppo.bed : $(wc -l < TATAWAWR_0mis_oppo.bed) sites"
+#TATAWAWR_0mis_oppo.bed : 186 sites
+echo "TATAWAWR_1mis_oppo.bed : $(wc -l < TATAWAWR_1mis_oppo.bed) sites"
+#TATAWAWR_1mis_oppo.bed : 2653 sites
+echo "TATAWAWR_2mis_oppo.bed : $(wc -l < TATAWAWR_2mis_oppo.bed) sites"
+#TATAWAWR_2mis_oppo.bed : 20425 sites
+
+echo "TATAWAWR_0mis_same.bed : $(wc -l < TATAWAWR_0mis_same.bed) sites"
+#TATAWAWR_0mis_same.bed : 372 sites
+echo "TATAWAWR_1mis_same.bed : $(wc -l < TATAWAWR_1mis_same.bed) sites"
+#TATAWAWR_1mis_same.bed : 3071 sites
+echo "TATAWAWR_2mis_same.bed : $(wc -l < TATAWAWR_2mis_same.bed) sites"
+#TATAWAWR_2mis_same.bed : 21446 sites
 rm TATAWAWR_0mis_oppo.bed TATAWAWR_1mis_oppo.bed TATAWAWR_2mis_oppo.bed TATAWAWR_0mis_same.bed TATAWAWR_1mis_same.bed TATAWAWR_2mis_same.bed
- 
+
+echo "TATAWAWR_oppo.bed : $(wc -l < TATAWAWR_oppo.bed) sites"
+#TATAWAWR_oppo.bed : 23264 sites
+echo "TATAWAWR_same.bed : $(wc -l < TATAWAWR_same.bed) sites"
+#TATAWAWR_same.bed : 24889 sites
+
 ## remove duplicated TATA if associated with different TSS. Keep the one with higher CoPRO data 
 #!/bin/bash
 input_file="TSS_all_TATA_same.bed"  
@@ -220,29 +251,43 @@ bedtools intersect -v -a - -b TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed Second_TSS_
 
 mkdir -p TSS_group
 mv   Second_TSS_oriabove_EP_TU_FirstTSS*.bed  TSS_oriabove_EP_TU_Uniq_Alter*.bed  TSS_group/
+## after associated a TATA located at promoter or enhancer region, the asociated TSS (first or second) is at canonical or non-canonical location, at same strand downstream or at opposite strand upstream:
+echo "TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed : $(wc -l < TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed) sites"
+#TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed : 17867 sites
+echo "TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATA.bed  : $(wc -l < TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATA.bed ) sites"
+#TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATA.bed  :  11847 sites
+### other with no TATA on same strand:
+echo "TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATAcontaining.bed : $(wc -l < TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATAcontaining.bed ) sites"
+#TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATAcontaining.bed : 5592 sites
+echo "TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATAcontaining.bed : $(wc -l < TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATAcontaining.bed ) sites"
+#TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATAcontaining.bed : 9020 sites
+echo "TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_noTATA.bed : $(wc -l < TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_noTATA.bed ) sites"
+#TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_noTATA.bed : 13631 sites
+echo "TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_noTATA.bed : $(wc -l < TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_noTATA.bed ) sites"
+#TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_noTATA.bed : 24447 sites
 
-## change TATA strand to TSS strand, make most 5' end as 0.
 
-
+## change TATA strand to TSS strand, make most 5' end as 0, and only take TATA with TSS at cononical location
 cat TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATA.bed | awk '{OFS="\t"} {print $16,$17,$18,$19,$20,$21,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$22}' | \
 awk '{ if (($14 ~ /_TATAsame/ ) || ($14 ~ /_TATAoppo/ ))  print $0 > "FixedTATA_TSS.bed"  }'  
+
 sort -k22,22nr FixedTATA_TSS.bed | awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$12,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22}' | \
 awk '{ if ($14 ~ /TATAsame/) print $0 > "FixedTATA_TSS_same.bed" ; else print $0 > "FixedTATA_TSS_oppo.bed"}'
 
 bedtools shift -i FixedTATA_TSS_same.bed -g $Genome -p -3 -m 3 > TATA_TSS_same_5prime.bed
 bedtools shift -i FixedTATA_TSS_oppo.bed -g $Genome -p -3 -m 3 > TATA_TSS_oppo_5prime.bed
 
-wc -l TATA_TSS_same_5prime.bed
-wc -l TATA_TSS_oppo_5prime.bed
-5159 TATA_TSS_same_5prime.bed
-1917 TATA_TSS_oppo_5prime.bed
+echo "TATA_TSS_same_5prime.bed : $(wc -l < TATA_TSS_same_5prime.bed) sites"
+# TATA_TSS_same_5prime.bed : 5507 sites
+echo "TATA_TSS_oppo_5prime.bed  : $(wc -l < TATA_TSS_oppo_5prime.bed) sites"
+#TATA_TSS_oppo_5prime.bed :  2071 sites
 
 cat TATA_TSS_same_5prime.bed TATA_TSS_oppo_5prime.bed > TATA_TSS-strand_tsssort.bed
-
+echo "TATA_TSS-strand_tsssort.bed  : $(wc -l < TATA_TSS-strand_tsssort.bed) sites"
+#TATA_TSS-strand_tsssort.bed  : 7578 sites
 
 
 ## take sequence around  TATA-same TSS.
-
 awk '{ if (($14 ~ /_-1_CA_0/ ) && ($22 == "-26"))  print $0 > "TATA_TSS_CA_same_mid_5prime.bed"  }'  TATA_TSS_same_5prime.bed
 awk '{ if (($14 ~ /_-1_CA_0/ ) && ($22 == "-23"))  print $0 > "TATA_TSS_CA_same_left_5prime.bed"  }'  TATA_TSS_same_5prime.bed
 awk '{ if (($14 ~ /_-1_CA_0/ ) && ($22 == "-29"))  print $0 > "TATA_TSS_CA_same_right_5prime.bed"  }'  TATA_TSS_same_5prime.bed
@@ -272,7 +317,8 @@ meme FixedTATA_TSS_oppo_20bp.fa -oc TATA_TSS_same/ -nmotifs 1 -maxw 20 -dna
 
 rm FixedTATA_TSS_same_20bp.bed  FixedTATA_TSS_oppo_20bp.bed FixedTATA_TSS_same_20bp.fa FixedTATA_TSS_oppo_20bp.fa
 
-
+conda deactivate 
+## take TSS upstream 27 region as the center of potential PIC for those with not connical TATA TSS
 cat TSS_group/TSS_oriabove_EP_TU_Uniq_Alter_TATA.bed TSS_group/Second_TSS_oriabove_EP_TU_FirstTSS_TATA.bed | \
 awk '{OFS="\t"} {print $16,$17,$18,$19,$20,$21,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$22}' >  TSS_TATA_fixednonfixed.bed
 
@@ -298,6 +344,7 @@ mkdir -p TSS_type_temp
 
 mv TSS_*.bed TSS_type_temp/
 
+## calculte ProT score for each PIC region
 
 for file in TSS_type_temp/TSS_noTATA_TATAcontaining.bed TSS_type_temp/TSS_TATA_fixednonfixed.bed TSS_type_temp/TSS_nonfixedTATA.bed ; do
   filename=$(basename "$file" ".bed")
@@ -306,6 +353,7 @@ for file in TSS_type_temp/TSS_noTATA_TATAcontaining.bed TSS_type_temp/TSS_TATA_f
   rm ${filename}_100bp.bed
 done
 
+mkdir -p SCORES
 mv *.cdt SCORES/
 
 tail -n +2 SCORES/TSS_TATA_fixednonfixed_100bp_PropT.cdt | cut -f 47-53 |  paste TSS_type_temp/TSS_TATA_fixednonfixed.bed - | \
@@ -327,8 +375,25 @@ awk '{if (($14 ~ /_Second_Refside_NonfixedTATA/) || ($14 ~ /_Second_Divside_Nonf
 mkdir -p PIC
 mv PIC_ProTsort*.bed TATA_ProTsort*.bed PIC/ 
 wc -l PIC/PIC*.bed
+ #   5436 PIC/PIC_ProTsort_TATAcontain_DivergentTSS.bed
+#    3584 PIC/PIC_ProTsort_TATAcontain_OrientatedTSS.bed
+ #  19223 PIC/PIC_ProTsort_TATAcontainnoTATA_SecondTSS.bed
+#  10439 PIC/PIC_ProTsort_noTATA_DivergentTSS.bed
+#   14008 PIC/PIC_ProTsort_noTATA_OrientatedTSS.bed
+#    5762 PIC/PIC_ProTsort_nonfixed_DivergentTSS.bed
+ #   6604 PIC/PIC_ProTsort_nonfixed_OrientatedTSS.bed
+#    9770 PIC/PIC_ProTsort_nonfixed_SecondTSS.bed
 wc -l PIC/TATA*.bed
 
+  #  2093 PIC/TATA_ProTsort_fixed_DivergentTSS.bed
+  # 3390 PIC/TATA_ProTsort_fixed_OrientatedTSS.bed
+  # 2095 PIC/TATA_ProTsort_fixed_SecondTSS.bed
+  # 5762 PIC/TATA_ProTsort_nonfixed_DivergentTSS.bed
+  # 6604 PIC/TATA_ProTsort_nonfixed_OrientatedTSS.bed
+  # 9770 PIC/TATA_ProTsort_nonfixed_SecondTSS.bed
+
+
+## just take first and orientated TSS for later analysis
 cat PIC/TATA_ProTsort_fixed_OrientatedTSS.bed | sort -k5,5n |  awk '{OFS="\t"} {print $7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$1,$2,$3,$4,$5,$6,$22}' | \
 awk '{if  ($8 ~ /TATAsame2mis/)  print $0 > "TSS_TATA2_same.bed"; else if ($8 ~ /TATAsame1mis/)  print $0 > "TSS_TATA1_same.bed"; else if ($8 ~ /TATAsame0mis/)  print $0 > "TSS_TATA0_same.bed"; else if ($8 ~ /oppo/) print $0 > "TSS_TATA_oppo.bed" }'
 
@@ -343,15 +408,16 @@ wc -l TSS_noTATA.bed
 wc -l  TSS_TATA_same.bed
 wc -l  TSS_TATA_oppo.bed
 
-   12132 TSS_noTATA.bed
-    2308 TSS_TATA_same.bed
-     743 TSS_TATA_oppo.bed
+#  13436 TSS_noTATA.bed
+ #  2557 TSS_TATA_same.be
+ #  833 TSS_TATA_oppo.bed
 
-head -n 3033 TSS_noTATA.bed > TSS_noTATA_1.bed
-tail -n +3334 TSS_noTATA.bed | head -n 3033 > TSS_noTATA_2.bed
-tail -n +6067 TSS_noTATA.bed | head -n 3033 > TSS_noTATA_3.bed
-tail -n +9100 TSS_noTATA.bed  >  TSS_noTATA_4.bed
+head -n 3359 TSS_noTATA.bed > TSS_noTATA_1.bed
+tail -n +3360 TSS_noTATA.bed | head -n 3033 > TSS_noTATA_2.bed
+tail -n +6719 TSS_noTATA.bed | head -n 3033 > TSS_noTATA_3.bed
+tail -n +10077 TSS_noTATA.bed  >  TSS_noTATA_4.bed
 
+## take all annotation
 cat PIC/PIC_ProTsort_TATAcontain_DivergentTSS.bed PIC/PIC_ProTsort_TATAcontain_OrientatedTSS.bed PIC/PIC_ProTsort_noTATA_DivergentTSS.bed PIC/PIC_ProTsort_noTATA_OrientatedTSS.bed PIC/PIC_ProTsort_nonfixed_DivergentTSS.bed PIC/PIC_ProTsort_nonfixed_OrientatedTSS.bed PIC/TATA_ProTsort_fixed_OrientatedTSS.bed PIC/TATA_ProTsort_fixed_DivergentTSS.bed | \
 awk '{OFS="\t"} {print $7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$1,$2,$3,$4,$5,$6}'  | bedtools sort -i | uniq | \
 awk '{if  ($6 == "+") print $0 > "TSS_all_+.bed"; else print $0 > "TSS_all_-.bed" }'
@@ -362,4 +428,7 @@ awk '{OFS="\t"} {print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$1
 
 cat TSS_all_+_+1Nuc.bed TSS_all_-_+1Nuc.bed | bedtools sort -i | uniq > TSS_all.bed
 rm TSS_all_+.bed  TSS_all_+_+1Nuc.bed TSS_all_-.bed  TSS_all_-_+1Nuc.bed
+
+wc -l TSS_all.bed
+# 51316 TSS_all.bed
 
