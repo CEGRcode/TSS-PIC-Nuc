@@ -125,7 +125,7 @@ for file in  $WRK/04_plusoneNucleosome/adj+1Nuc_allphase_TSS.bed ; do
     filename=$(basename "$file" ".bed")
     bedtools shift -i $file -g $Genome -p -100 -m 100 > $Reference/${filename}_up100.bed
     java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 120 $Reference/${filename}_up100.bed -o $Reference/${filename}_up100_120bp.bed
-    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 120 $file -o $Reference/${filename}_1000bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 1000 $file -o $Reference/${filename}_1000bp.bed
     rm  $Reference/${filename}_up100.bed
 done
 echo "adj+1Nuc_allphase_TSS_up100_120bp.bed : $(wc -l < $Reference/adj+1Nuc_allphase_TSS_up100_120bp.bed ) sites"
