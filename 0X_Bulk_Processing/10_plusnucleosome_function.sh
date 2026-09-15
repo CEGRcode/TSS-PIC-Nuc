@@ -10,10 +10,10 @@ SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
 COMPOSITE=$WRK/bin/sum_Col_CDT.pl
 ## determin output
 [ -d logs ] || mkdir logs
-[ -d $WRK/Library/F3f ] || mkdir -p $WRK/Library/F3f
-[ -d $WRK/Library/E10 ] || mkdir -p $WRK/Library/E10
+[ -d $WRK/Library/F4B ] || mkdir -p $WRK/Library/F4B
+[ -d $WRK/Library/S11 ] || mkdir -p $WRK/Library/S11
 
-cd $WRK/Library/F3f
+cd $WRK/Library/F4B
 
 awk -v file="+1Nuc_" '{ if ( $8 ~ /YRWS/  && $13> 0 && $12> 0 && $11> 0 && $10> 0 && $21 !~ /Divergent/  && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160    )  { print $0 > ( file "YRWS.bed")
      } else if ( $8 ~ /sameYR_lowWS/  && $11> 0 && $10> 0 && $21 !~ /Divergent/ && $27 !~ /_noncodingTSS/ && $7 > 0 && $5 >=50 && $5 <=160  ) { print $0 > ( file "sameYR_lowWS.bed")
@@ -48,6 +48,7 @@ awk '{OFS="\t"} {print $1,$2,$3,$15,$17,$20,$23,$24,$25}'  output.txt >> phasesc
 rm temp.txt  output.txt
 python $WRK/bin/Correlation.py -i phasescorethrethold.csv
 
-cp -r enrichment_tables  $WRK/Library/E10
+cp -r enrichment_tables  $WRK/Library/S11
+
 
 
