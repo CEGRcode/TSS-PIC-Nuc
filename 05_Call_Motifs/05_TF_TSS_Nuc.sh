@@ -20,7 +20,6 @@ NormDIR=$WRK/data/NormalizationFactors
 Call_Motifs=$WRK/05_Call_Motifs/
 cd $Call_Motifs
 
-
 ## collect motif, include TATA
 awk '{OFS="\t"} {print $1,$2,$3,$4,$8,$6,$7}' FIMO/SP1/SP1_motif1_Occupancy.bed | bedtools intersect -u -a - -b Chexmix/SP1/SP1_experiment.bed |  awk '{ if ($1 !~/alt/ && $1 !~/random/ && $1 !~/Un/ && $1 !~/chrM/) { print $0 > "SP1_Occupancy_1bp.bed" } }'
 awk '{OFS="\t"} {print $1,$2,$3,$4,$8,$6,$7}' FIMO/YY1/YY1_motif1_Occupancy.bed | bedtools intersect -u -a - -b Chexmix/YY1/YY1_experiment.bed |  awk '{ if ($1 !~/alt/ && $1 !~/random/ && $1 !~/Un/ && $1 !~/chrM/) { print $0 > "YY1_Occupancy_1bp.bed" } }'
@@ -49,6 +48,20 @@ rm ZFP91_Occupancy_1bp_originalstrand_+.bed ZFP91_Occupancy_1bp_originalstrand_-
 cat ../03_core-promoter/FixedTATA_TSS.bed | \
 awk '{OFS="\t"; print $1,$2,$3,$4,"0",$6,"TATA_M1"}' >  TATA_Occupancy_1bp.bed
 
+## check the account 
+wc -l *_Occupancy_1bp.bed
+#    420 E2F7_Occupancy_1bp.bed
+#    581 FOXA1_Occupancy_1bp.bed
+#  5299 GABPA_Occupancy_1bp.bed
+#   2912 GATA1_Occupancy_1bp.bed
+#   4326 NFYC_Occupancy_1bp.bed
+#   4507 NRF1_Occupancy_1bp.bed
+#   4217 SP1_Occupancy_1bp.bed
+#   7076 TATA_Occupancy_1bp.bed
+#   5830 USF1_Occupancy_1bp.bed
+#    129 WDR5_Occupancy_1bp.bed
+#   1876 YY1_Occupancy_1bp.bed
+ #  1054 ZFP91_Occupancy_1bp.bed
 
 for file in *_Occupancy_1bp.bed ; do
     TF=$(basename "$file" ".bed" | cut -d "_" -f 1)
@@ -224,7 +237,6 @@ rm TF_M1_AdjNuc_phase*.bed
 ## TF-specific analysis
 
 ### WDR5
-
 cd WDR5
 
 awk '{
@@ -236,8 +248,11 @@ awk '{
     }
 }' nearestTSS_WDR5_M1_sort.bed 
 
-## +1Nuc
+##check number
+echo "nearestTSS_WDR5_M1_sort.bed : $(wc -l < nearestTSS_WDR5_M1_sort.bed ) sites"
+#nearestTSS_WDR5_M1_sort.bed : 81 sites
 
+## +1Nuc
 awk '{OFS="\t"} { print $15,$16,$17,$18,$19,$20,$21,$22}' TSS_same_WDR5_M1.bed > +1Nuc_TSS_same_WDR5_M1.bed
 
 cd ..
@@ -310,6 +325,7 @@ cat GABPA/TSS_GABPA_same.bed GABPA/TSS_GABPA_oppo.bed  > TSS_GABPA.bed
 cat SP1/TSS_SP1_same.bed SP1/TSS_SP1_oppo.bed  > TSS_SP1.bed
 cat NFYC/TSS_NFYC_same.bed NFYC/TSS_NFYC_oppo.bed  > TSS_NFYC.bed
 
+
 awk '{OFS="\t"} { print $1,$9,$10,$11,$12,$13}' TSS_GABPA.bed > NFR_TSS_GABPA.bed
 awk '{OFS="\t"} { print $1,$9,$10,$11,$12,$13}' TSS_SP1.bed > NFR_TSS_SP1.bed
 awk '{OFS="\t"} { print $1,$9,$10,$11,$12,$13}' TSS_NFYC.bed > NFR_TSS_NFYC.bed
@@ -340,6 +356,19 @@ mkdir -p 3MOTIF
 
 mv *with* 3MOTIF 
 
+wc -l 3MOTIF/*.bed
+ #   286 3MOTIF/GABPA_TSS_withNFYC.bed
+  #   705 3MOTIF/GABPA_TSS_withSP1.bed
+  #  3132 3MOTIF/GABPA_TSS_withoutNFYC.bed
+  #  2713 3MOTIF/GABPA_TSS_withoutSP1.bed
+  #   276 3MOTIF/NFYC_TSS_withGABPA.bed
+  #   402 3MOTIF/NFYC_TSS_withSP1.bed
+  #  1279 3MOTIF/NFYC_TSS_withoutGABPA.bed
+  #  1153 3MOTIF/NFYC_TSS_withoutSP1.bed
+   #  717 3MOTIF/SP1_TSS_withGABPA.bed
+   #  401 3MOTIF/SP1_TSS_withNFYC.bed
+   # 2208 3MOTIF/SP1_TSS_withoutGABPA.bed
+   # 2524 3MOTIF/SP1_TSS_withoutNFYC.bed
 cd YY1
 TF=YY1
 
@@ -352,12 +381,15 @@ awk '{
     }
 }' nearestTSS_${TF}_M1_sort.bed
 
-wc -l nearestTSS_${TF}_M1_sort.bed
+##check number
+echo "nearestTSS_YY1_M1_sort.bed : $(wc -l < nearestTSS_YY1_M1_sort.bed ) sites"
+#nearestTSS_YY1_M1_sort.bed : 1108 sites
+
 wc -l TSS_same_YY1_M1_overlap.bed
 wc -l TSS_oppo_YY1_M1_overlap.bed
-    1108 nearestTSS_YY1_M1_sort.bed
-     531 TSS_same_YY1_M1_overlap.bed
-     281 TSS_oppo_YY1_M1_overlap.bed
+#  1108 nearestTSS_YY1_M1_sort.bed
+#  531 TSS_same_YY1_M1_overlap.bed
+#  281 TSS_oppo_YY1_M1_overlap.bed
 awk '{OFS="\t"} { print $23,$24,$25,$26,$27,$28,$29,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$30}' TSS_oppo_${TF}_M1_overlap.bed > ${TF}_M1_TSS_oppo_overlap.bed
 awk '{OFS="\t"} { print $23,$24,$25,$26,$27,$28,$29,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$30}' TSS_same_${TF}_M1_overlap.bed > ${TF}_M1_TSS_same_overlap.bed
 
