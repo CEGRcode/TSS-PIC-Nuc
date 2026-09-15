@@ -12,23 +12,26 @@ COMPOSITEFILTER=$WRK/bin/sum_Col_CDT_filter.pl
 ## determin output
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-[ -d $WRK/Library/E6 ] || mkdir -p $WRK/Library/E6
-[ -d $WRK/Library/F3d ] || mkdir -p $WRK/Library/F3d
-[ -d $WRK/Library/F3e ] || mkdir -p $WRK/Library/F3e
-[ -d $WRK/Library/F3g ] || mkdir -p $WRK/Library/F3g
-[ -d $WRK/Library/E8 ] || mkdir -p $WRK/Library/E8
+[ -d $WRK/Library/S7 ] || mkdir -p $WRK/Library/S7
+[ -d $WRK/Library/F3D ] || mkdir -p $WRK/Library/F3D
+[ -d $WRK/Library/F4A ] || mkdir -p $WRK/Library/F4A
+[ -d $WRK/Library/F4C ] || mkdir -p $WRK/Library/F4C
+[ -d $WRK/Library/S9 ] || mkdir -p $WRK/Library/S9
 [ -d $WRK/Library/ET3 ] || mkdir -p $WRK/Library/ET3
+[ -d $WRK/Library/F5D ] || mkdir -p $WRK/Library/F5D
+[ -d $WRK/Library/S8A ] || mkdir -p $WRK/Library/S8A
+
 
 BAMDIR=$WRK/data/BAM
-cd $WRK/Library/E6
+cd $WRK/Library/S7
 
 
 for file in $WRK/04_plusoneNucleosome/SCORES/*_Adj+1Nuc_TSS.bed  ; do
         filename=$(basename "$file" ".bed")
-        cp $WRK/04_plusoneNucleosome/SCORES/${filename}_YY_RR_WW_SS_means.out $WRK/Library/E6
+        cp $WRK/04_plusoneNucleosome/SCORES/${filename}_YY_RR_WW_SS_means.out $WRK/Library/S7
 done
 
-cd $WRK/Library/F3d
+cd $WRK/Library/F3D
 
 for file in $WRK/04_plusoneNucleosome/SCORES/*_Adj+1Nuc_TSS.bed  ; do
     filename=$(basename "$file" .bed)
@@ -40,7 +43,7 @@ for file in $WRK/04_plusoneNucleosome/SCORES/*_Adj+1Nuc_TSS.bed  ; do
     }'  > ${filename}_Conservation_means.out
 done
 
-cd $WRK/Library/E8
+cd $WRK/Library/S9
 
 ## times conservation score to WW pattern
 
@@ -257,8 +260,8 @@ perl $COMPOSITEFILTER $WRK/Library/E8/CDT/RRxphyloP30way_"${filename}"_sense_reo
 done
 
 
-cd $WRK/Library/F3g
-mkdir -p $WRK/Library/F3g/SCORES
+cd $WRK/Library/F4C
+mkdir -p $WRK/Library/F4C/SCORES
 
 for file in  $Reference/+1Nuc_antiYR_sameWS.bed  $Reference/+1Nuc_lessDNAencode.bed  $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_sameYR_lowWS.bed  $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $Reference/+1Nuc_sameYR_antiWS.bed   ; do
         filename=$(basename "$file" ".bed")
@@ -343,8 +346,8 @@ done
 cat +1Nuc_YRWS_BIphasescore.txt +1Nuc_sameYR_lowWS_BIphasescore.txt +1Nuc_lowYR_sameWS_BIphasescore.txt +1Nuc_sameYR_antiWS_BIphasescore.txt +1Nuc_antiYR_sameWS_BIphasescore.txt +1Nuc_antiYR_antiWS_BIphasescore.txt +1Nuc_lessDNAencode_BIphasescore.txt >  BIphasescore.txt
 rm +1Nuc_YRWS_BIphasescore.txt +1Nuc_sameYR_lowWS_BIphasescore.txt +1Nuc_lowYR_sameWS_BIphasescore.txt +1Nuc_sameYR_antiWS_BIphasescore.txt +1Nuc_antiYR_sameWS_BIphasescore.txt +1Nuc_antiYR_antiWS_BIphasescore.txt +1Nuc_lessDNAencode_BIphasescore.txt
 
-cd $WRK/Library/F3e
-mkdir -p $WRK/Library/F3e/SCORES
+cd $WRK/Library/F4A
+mkdir -p $WRK/Library/F4A/SCORES
 
 ## salt treatment
 
@@ -431,7 +434,7 @@ done
 cat +1Nuc_YRWS_1000Sup-phasescore.txt +1Nuc_sameYR_lowWS_1000Sup-phasescore.txt +1Nuc_lowYR_sameWS_1000Sup-phasescore.txt +1Nuc_sameYR_antiWS_1000Sup-phasescore.txt +1Nuc_antiYR_sameWS_1000Sup-phasescore.txt +1Nuc_antiYR_antiWS_1000Sup-phasescore.txt +1Nuc_lessDNAencode_1000Sup-phasescore.txt >  1000Sup-phasescore.txt
 rm +1Nuc_YRWS_1000Sup-phasescore.txt +1Nuc_sameYR_lowWS_1000Sup-phasescore.txt +1Nuc_lowYR_sameWS_1000Sup-phasescore.txt +1Nuc_sameYR_antiWS_1000Sup-phasescore.txt +1Nuc_antiYR_sameWS_1000Sup-phasescore.txt +1Nuc_antiYR_antiWS_1000Sup-phasescore.txt +1Nuc_lessDNAencode_1000Sup-phasescore.txt
 
-cp $WRK/Library/F3g/BIphasescore.txt  $WRK/Library/F3e
+cp $WRK/Library/F3A/BIphasescore.txt  $WRK/Library/F3C
 
 ### Sup table : calculate dinucleotide count in entire region ###
 cd $WRK/Library/ET2
@@ -644,3 +647,71 @@ for file in $WRK/04_plusoneNucleosome/SCORES/*_Adj+1Nuc_TSS.bed; do
 
     rm *xphyloP30way_${filename}_score_*_phase.txt ${filename}_phyloP30way_score_*_phase.txt 
 done
+
+
+### phase score of TSS at prefered or non-prefered Nuc:
+
+cd $WRK/Library/F5D
+mkdir -p $WRK/Library/F5D/SCORES
+for file in  $WRK/04_plusoneNucleosome/adj+1Nuc_phase48.bed $WRK/04_plusoneNucleosome/adj+1Nuc_phase93.bed   ; do
+    filename=$(basename "$file" ".bed")
+    bedtools shift -i $file -g $Genome -p -100 -m 100 > $Reference/${filename}_up100.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 120 $Reference/${filename}_up100.bed -o $Reference/${filename}_up100_120bp.bed
+    java -jar $SCRIPTMANAGER coordinate-manipulation expand-bed -c 140 $Reference/${filename}_up100.bed -o $Reference/${filename}_up100_140bp.bed
+done
+
+for file in $Reference/adj+1Nuc_phase93_up100_120bp.bed  $Reference/adj+1Nuc_phase48_up100_120bp.bed  ; do
+        filename=$(basename "$file" "_120bp.bed")
+        java -jar $SCRIPTMANAGER read-analysis tag-pileup $file "$BAMDIR"/ENCFF663UAN_CoPRO_hg38.bam --cpu 4 -5 -2  -M SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2
+        java -jar $SCRIPTMANAGER read-analysis tag-pileup $Reference/${filename}_140bp.bed "$BAMDIR"/ENCFF663UAN_CoPRO_hg38.bam --cpu 4 -5 -2  -M SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2 
+        java -jar $SCRIPTMANAGER read-analysis aggregate-data --sum SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2_sense.cdt -o SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2_SCORES.out 
+        rm SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2_sense.cdt SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2_anti.cdt
+done
+
+for file in $Reference/adj+1Nuc_phase93_up100_140bp.bed  ; do
+    filename=$(basename "$file" _140bp.bed)
+    tail -n +2 "SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense.cdt" | \
+    cut -f 3-142 | \
+    awk '{
+        OFS = "\t";
+        print ($18+$19+$20+$28+$29+$30+$38+$39+$40+$48+$49+$50+$58+$59+$60+$68+$69+$70+$78+$79+$80+$88+$89+$90+$98+$99+$100+$108+$109+$110+$118+$119+$120+$128+$129+$130)-($13+$14+$15+$23+$24+$25+$33+$34+$35+$43+$44+$45+$53+$54+$55+$63+$64+$65+$73+$74+$75+$83+$84+$85+$93+$94+$95+$103+$104+$105+$113+$114+$115+$123+$124+$125);
+    }'  > "ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense_temp.txt"
+
+     paste SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2_SCORES.out  | tail -n +2 | cut -f 2,4 |  paste - "ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense_temp.txt" | awk '{
+        sum1 += $1; sum2 += $2; sum3 += $3; sum4 += $4;
+    } END {
+        total =  sum1;
+        peaktotal =  sum2;
+        average = peaktotal / total;
+        print peaktotal, total, average ;
+    }' > ${filename}_phasescore.txt
+    rm "ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense_temp.txt"
+done
+
+for file in $Reference/adj+1Nuc_phase48_up100_140bp.bed  ; do
+    filename=$(basename "$file" _140bp.bed)
+    tail -n +2 "SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense.cdt" | \
+    cut -f 3-142 | \
+    awk '{
+        OFS = "\t";
+        print ($13+$14+$15+$23+$24+$25+$33+$34+$35+$43+$44+$45+$53+$54+$55+$63+$64+$65+$73+$74+$75+$83+$84+$85+$93+$94+$95+$103+$104+$105+$113+$114+$115+$123+$124+$125)-($18+$19+$20+$28+$29+$30+$38+$39+$40+$48+$49+$50+$58+$59+$60+$68+$69+$70+$78+$79+$80+$88+$89+$90+$98+$99+$100+$108+$109+$110+$118+$119+$120+$128+$129+$130);
+    }'  > "ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense_temp.txt"
+
+     paste SCORES/ENCFF663UAN_CoPRO_hg38_${filename}_120bp_read2_SCORES.out  | tail -n +2 | cut -f 2,4 |  paste - "ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense_temp.txt" | awk '{
+        sum1 += $1; sum2 += $2; sum3 += $3; sum4 += $4;
+    } END {
+        total =  sum1;
+        peaktotal =  sum2;
+        average = peaktotal / total;
+        print peaktotal, total, average ;
+    }' > ${filename}_phasescore.txt
+    rm "ENCFF663UAN_CoPRO_hg38_${filename}_140bp_read2_sense_temp.txt"
+done
+
+
+### current figure 5d:
+mkdir -p $WRK/Library/S8A
+mkdir -p $WRK/Library/S8A/Nuc
+cp $Reference/+1Nuc_sameYR_antiWS.bed $Reference/+1Nuc_antiYR_sameWS.bed $Reference/+1Nuc_YRWS.bed $Reference/+1Nuc_lessDNAencode.bed $Reference/+1Nuc_sameYR_lowWS.bed $Reference/+1Nuc_lowYR_sameWS.bed $Reference/+1Nuc_antiYR_antiWS.bed $WRK/Library/S8A/Nuc
+conda deactivate
+python3 $WRK/Library/nuc_phase_barplots_filtered.py $WRK/Library/S8A/Nuc
