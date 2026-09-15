@@ -10,13 +10,14 @@ SCRIPTMANAGER=$WRK/bin/ScriptManager-v0.15.jar
 ## determin output
 [ -d logs ] || mkdir logs
 [ -d $WRK/Library ] || mkdir -p $WRK/Library
-[ -d $WRK/Library/F2a ] || mkdir -p $WRK/Library/F2a
-[ -d $WRK/Library/F2b ] || mkdir -p $WRK/Library/F2b
-[ -d $WRK/Library/E5a ] || mkdir -p $WRK/Library/E5a
-[ -d $WRK/Library/F5d ] || mkdir -p $WRK/Library/F5d
+[ -d $WRK/Library/F2A ] || mkdir -p $WRK/Library/F2A
+[ -d $WRK/Library/F2B ] || mkdir -p $WRK/Library/F2B
+[ -d $WRK/Library/F2C ] || mkdir -p $WRK/Library/F2C
+[ -d $WRK/Library/S4 ] || mkdir -p $WRK/Library/S4
+[ -d $WRK/Library/S5 ] || mkdir -p $WRK/Library/S5
 
 BAMDIR=$WRK/data/BAM/
-cd $WRK/Library/F2b
+cd $WRK/Library/F2B
 
 ### calculate the occupancy upstream 100bp vs downstream 100bp
 
@@ -35,9 +36,10 @@ for file in $BAMDIR/K562_TAF4B_*.bam $BAMDIR/K562_TAF4_*.bam   $BAMDIR/K562_MED1
   paste ${TF}_TSS_TATA_same_U.out ${TF}_TSS_TATA_same_D.out  ${TF}_TSS_noTATA_4_U.out  ${TF}_TSS_noTATA_4_D.out | \
   awk '{OFS="\t"} {print ($2-$1)/($1+$2),($4-$3)/($3+$4)}' > $BAM\_TSS_same_noTATA_UD.out
   rm  ${TF}_TSS_TATA_same_U.out ${TF}_TSS_TATA_same_D.out  ${TF}_TSS_noTATA_4_U.out  ${TF}_TSS_noTATA_4_D.out
+  mv $BAM\_TSS_same_noTATA_UD.out $WRK/Library/F2C
 done
 
-cd $WRK/Library/F2a
+cd $WRK/Library/F2A
 
 for file in $BAMDIR/K562_GTF2A1_*.bam $BAMDIR/K562_TBP_*.bam ; do
     TF=`basename $file ".bam" | cut -d "_" -f 2`
@@ -138,7 +140,7 @@ for file in  $BAMDIR/K562_TAF4B_*.bam   ; do
   rm ${TF}_TSS_TATA_same_F.out ${TF}_TSS_TATA_same_B.out ${TF}_TSS_TATA_oppo_F.out ${TF}_TSS_TATA_oppo_B.out ${TF}_TSS_noTATA_1_F.out ${TF}_TSS_noTATA_1_B.out ${TF}_TSS_noTATA_2_F.out ${TF}_TSS_noTATA_2_B.out ${TF}_TSS_noTATA_3_F.out ${TF}_TSS_noTATA_3_B.out  ${TF}_TSS_noTATA_4_F.out  ${TF}_TSS_noTATA_4_B.out
 done
 
-cd $WRK/Library/E5a
+cd $WRK/Library/S4
     
 for file in $BAMDIR/K562_GTF2A2_*.bam  $BAMDIR/K562_DR1_*.bam  ; do
     TF=`basename $file ".bam" | cut -d "_" -f 2`
@@ -159,7 +161,7 @@ for file in $BAMDIR/K562_GTF2A2_*.bam  $BAMDIR/K562_DR1_*.bam  ; do
     for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_TSS_noTATA_1_B.out
   tail -n +2 Composites/K562_${TF}_BX_rep1_hg38_TSS_noTATA_2_1000bp_5read1_Normalized.out | cut -f 501-560 | awk '{
     for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_TSS_noTATA_2_B.out
-  tail -n +2 Composites/K562_${TF}_BX_rep1_hg38_TSS_noTATA_3_1000bp_5read1_Normalized.out | cut -f 501-560 | awk '{
+  tail -n +2 Composites/K562_${TF}.out | cut -f 501-560 | awk '{
     for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_TSS_noTATA_3_B.out
   tail -n +2 Composites/K562_${TF}_BX_rep1_hg38_TSS_noTATA_4_1000bp_5read1_Normalized.out | cut -f 501-560 | awk '{
     for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_TSS_noTATA_4_B.out
@@ -308,7 +310,7 @@ for file in  $BAMDIR/K562_TAF1_*.bam  $BAMDIR/K562_TAF3_*.bam $BAMDIR/K562_TAF11
   rm ${TF}_TSS_TATA_same_F.out ${TF}_TSS_TATA_same_B.out ${TF}_TSS_TATA_oppo_F.out ${TF}_TSS_TATA_oppo_B.out ${TF}_TSS_noTATA_1_F.out ${TF}_TSS_noTATA_1_B.out ${TF}_TSS_noTATA_2_F.out ${TF}_TSS_noTATA_2_B.out ${TF}_TSS_noTATA_3_F.out ${TF}_TSS_noTATA_3_B.out  ${TF}_TSS_noTATA_4_F.out  ${TF}_TSS_noTATA_4_B.out
 done
 
-cd $WRK/Library/F2d
+cd $WRK/Library/F2D
 ### calculate nucleosome engagement Triptolide treatment vs DMSO treatment
 
 for file in  $BAMDIR/TriptolideK562_TFIIB_*.bam $BAMDIR/TriptolideK562_PolII_*.bam $BAMDIR/TriptolideK562_TBP_*.bam   $BAMDIR/TriptolideK562_GTF2A1_*.bam  ; do
@@ -326,6 +328,24 @@ for file in  $BAMDIR/TriptolideK562_TFIIB_*.bam $BAMDIR/TriptolideK562_PolII_*.b
   rm  ${TF}_Adj+1Nuc_Trip.out ${TF}_all_Trip.out ${TF}_Adj+1Nuc_DMSO.out ${TF}_all_DMSO.out 
 done
 
+for file in  $BAMDIR/TriptolideK562_TAF1_*.bam   $BAMDIR/TriptolideK562_TAF3_*.bam  ; do
+   TF=`basename $file ".bam" | cut -d "_" -f 2`
+  tail -n +2 Composites/TriptolideK562_${TF}_BX_rep1_hg38_Adj+1Nuc_TSS_all_1000bp_5read1_Normalized.out | cut -f 426-575  | awk '{
+    for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_Adj+1Nuc_Trip.out
+  tail -n +2 Composites/TriptolideK562_${TF}_BX_rep1_hg38_Adj+1Nuc_TSS_all_1000bp_5read1_Normalized.out | cut -f 251-750  | awk '{
+    for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_all_Trip.out
+  tail -n +2 Composites/DMSOK562_${TF}_BX_rep1_hg38_Adj+1Nuc_TSS_all_1000bp_5read1_Normalized.out | cut -f 426-575  | awk '{
+    for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_Adj+1Nuc_DMSO.out
+  tail -n +2 Composites/DMSOK562_${TF}_BX_rep1_hg38_Adj+1Nuc_TSS_all_1000bp_5read1_Normalized.out | cut -f 251-750  | awk '{
+    for (i = 1; i <= NF; i++) sum += $i } END { print sum }' > ${TF}_all_DMSO.out
+  paste ${TF}_Adj+1Nuc_Trip.out ${TF}_all_Trip.out ${TF}_Adj+1Nuc_DMSO.out ${TF}_all_DMSO.out | \
+  awk '{OFS="\t"} {print ($1)/($2),($3)/($4)}' > ${TF}_Tris-DMSO.out
+  rm  ${TF}_Adj+1Nuc_Trip.out ${TF}_all_Trip.out ${TF}_Adj+1Nuc_DMSO.out ${TF}_all_DMSO.out 
+done
+
+mkdir -p $WRK/Library/S5
+mkdir -p $WRK/Library/S5/Composites
+cp  $WRK/Library/F2D/Composites/*_TAF*.out $WRK/Library/F2D/Composites/*_TFIIB*.out $WRK/Library/S5/Composites
 
 
 
