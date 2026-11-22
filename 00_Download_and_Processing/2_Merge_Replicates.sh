@@ -14,7 +14,8 @@ PICARD=$WRK/../bin/picard.jar
 cd $WRK
 # Dowload K562_IgG_BX_merge_hg38.bam from GEO GSE267711 
 # Dowload K562_FOXA1_BX_merge_hg38.bam from GEO GSE267711
-# Download Benzonase-seq BNase-seq_50U-10min_merge_hg38.bam and H3K4me3 ChIP-seq BNase-ChIP_H3K4me3_merge_hg38.bam from GSE266547
+# Download BNase-seq_50U-10min_merge_hg38.bam and H3K4me3 ChIP-seq BNase-ChIP_H3K4me3_merge_hg38.bam from GSE266547
+
 
 [ -d $WRK/sample-BAM ] || mkdir $WRK/sample-BAM
 [ -d $WRK/../data ] || mkdir $WRK/../data
