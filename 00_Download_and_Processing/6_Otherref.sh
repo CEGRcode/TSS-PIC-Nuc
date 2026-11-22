@@ -13,9 +13,13 @@ cd $WRK
 Annotation=$WRK/../Annotation
 
 # Download ref file from other github repo
-wget https://github.com/CEGRcode/NucleosomePhasing/data/RefPT-Other/hg38_TSS-ALL_GENCODEV47_SORT.bed
-wget https://github.com/CEGRcode/NucleosomePhasing/data/RefPT-Krebs/BNase-Nucleosomes.bed
-wget https://github.com/CEGRcode/NucleosomePhasing/data/RefPT-Other/CpGIslands.bed
+wget https://github.com/CEGRcode/2026-Chen_NucleosomePhasing/data/RefPT-Other/hg38_TSS-ALL_GENCODEV47_SORT.bed
+wget https://github.com/CEGRcode/2026-Chen_NucleosomePhasing/data/RefPT-Krebs/BNase-Nucleosomes_part1.bed.gz
+wget https://github.com/CEGRcode/2026-Chen_NucleosomePhasing/data/RefPT-Krebs/BNase-Nucleosomes_part2.bed.gz
+cat BNase-Nucleosomes_part1.bed.gz BNase-Nucleosomes_part2.bed.gz > BNase-Nucleosomes.bed
+remove BNase-Nucleosomes_part1.bed.gz BNase-Nucleosomes_part2.bed.g
+wget https://github.com/CEGRcode/2026-Chen_NucleosomePhasing/data/RefPT-Other/CpGIslands.tsv.gz 
+
 svn export https://github.com/CEGRcode/NucleosomePhasing/trunk/hg38_files
 mv hg38_files $WRK/../
 mv *.bed $Annotation
