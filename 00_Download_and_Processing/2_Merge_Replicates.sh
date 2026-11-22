@@ -40,7 +40,15 @@ cp 43161_Taf1_hTAF1serum5333_K562_-_IMDM_Triptolide_BX_hg38.bam     TriptolideK5
 cp 43164_Taf3_HPA066184_K562_-_IMDM_Triptolide_BX_hg38.bam        TriptolideK562_TAF3_BX_rep1_hg38.bam
 cp 43168_Taf1_hTAF1serum5333_K562_-_IMDM_DMSO_BX_hg38.bam        DMSOK562_TAF2_BX_rep1_hg38.bam
 cp 43171_Taf3_HPA066184_K562_-_IMDM_DMSO_BX_hg38.bam        DMSOK562_TAF2_BX_rep3_hg38.bam
-cp 33911_DR1_HPA055308_K562_-_IMDM_-_BX_hg38.bam      K562_DR1_BX_rep1_hg38.bam    
+cp 33911_DR1_HPA055308_K562_-_IMDM_-_BX_hg38.bam      K562_DR1_BX_rep1_hg38.bam
+
+java -jar $PICARD MergeSamFiles -I 33943_Med1_HPA052818_K562_-_IMDM_-_BX_hg38.bam \
+                                -I 34204_Med1_HPA052818_K562_-_IMDM_-_BX_hg38.bam \
+                                -O K562_MED1_BX_rep1_hg38.bam
+java -jar $PICARD MergeSamFiles -I 33945_MED12_HPA003185_K562_-_IMDM_-_BX_hg38.bam \
+                                -I 34206_MED12_HPA003185_K562_-_IMDM_-_BX_hg38.bam \
+                                -O K562_MED12_BX_rep1_hg38.bam
+                                
 java -jar $PICARD MergeSamFiles -I 40049_E2F7_HPA064866_K562_-_IMDM_-_BX_hg38.bam \
                                 -I 40080_E2F7_HPA064866_K562_-_IMDM_-_BX_hg38.bam \
                                 -O K562_E2F7_BX_rep1_hg38.bam
