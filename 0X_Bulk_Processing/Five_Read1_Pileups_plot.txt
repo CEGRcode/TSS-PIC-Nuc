@@ -61,7 +61,7 @@ NaN	NaN	5	NCIS	../data/BAM/K562_TAF9_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1
 NaN	NaN	5	NCIS	../data/BAM/K562_TAF9B_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
 NaN	NaN	5	NCIS	../data/BAM/K562_TAF4_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
 NaN	NaN	5	NCIS	../data/BAM/K562_MED12_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
-NaN	NaN	5	NCIS	../data/BAM/K562_TFIIH1_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
+NaN	NaN	5	NCIS	../data/BAM/K562_GTF2H1_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
 NaN	NaN	5	NCIS	../data/BAM/K562_ERCC3_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
 NaN	NaN	5	NCIS	../data/BAM/K562_NELFA_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
 NaN	NaN	5	NCIS	../data/BAM/K562_NELFE_BX_rep1_hg38.bam	Reference/TSS_noTATA_all_1000bp.bed		 S4
