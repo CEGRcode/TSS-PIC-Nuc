@@ -12,9 +12,6 @@ PICARD=$WRK/../bin/picard.jar
 # Script shortcuts
 
 cd $WRK
-# Dowload K562_IgG_BX_merge_hg38.bam from GEO GSE267711 
-# Dowload K562_FOXA1_BX_merge_hg38.bam from GEO GSE267711
-# Download Benzonase-seq: BNase-seq_50U-10min_merge_hg38.bam and H3K4me3: ChIP-seq BNase-ChIP_H3K4me3_merge_hg38.bam from GSE266547
 
 
 [ -d $WRK/sample-BAM ] || mkdir $WRK/sample-BAM
@@ -23,6 +20,13 @@ cd $WRK
 
 mv *.bam $WRK/sample-BAM
 # Use Picard to merge resequenced technical replicates, otherwise rename BAM using cp
+
+# make K562_IgG_BX_merge_hg38.bam from GEO GSE267711 
+# make K562_FOXA1_BX_merge_hg38.bam from GEO GSE267711
+# make Benzonase-seq: BNase-seq_50U-10min_merge_hg38.bam and H3K4me3: ChIP-seq BNase-ChIP_H3K4me3_merge_hg38.bam from GSE266547
+
+GSM8607769	38477_K562_FOXA1_rep1-1
+
 
 # ChIP-exo rep1
 
