@@ -10,7 +10,7 @@ NaN	NaN	1	NCIS	../data/BAM/K562_DR1_BX_rep1_hg38.bam   	Reference/TSS_TATAsame_o
 NaN	NaN	1	NCIS	../data/BAM/K562_TAF4_BX_rep1_hg38.bam  	Reference/TSS_TATAsame_oppo_noTATA_500bp.bed 		S4A
 NaN	NaN	1	NCIS	../data/BAM/K562_MED12_BX_rep1_hg38.bam  	Reference/TSS_TATAsame_oppo_noTATA_500bp.bed 		S4A
 NaN	NaN	1	NCIS	../data/BAM/K562_TAF6_BX_rep1_hg38.bam  	Reference/TSS_TATAsame_oppo_noTATA_500bp.bed 		S4A
-NaN	NaN	1	NCIS	../data/BAM/K562_ERCC1_BX_rep1_hg38.bam  	Reference/TSS_TATAsame_oppo_noTATA_500bp.bed 		S4A
+NaN	NaN	1	NCIS	../data/BAM/K562_ERCC3_BX_rep1_hg38.bam  	Reference/TSS_TATAsame_oppo_noTATA_500bp.bed 		S4A
 NaN	NaN	1	NCIS	../data/BAM/K562_NELFA_BX_rep1_hg38.bam  	Reference/TSS_TATAsame_oppo_noTATA_500bp.bed 		S4A
 NaN	NaN	NaN	NaN	    ../data/BAM/BNase-seq_50U-10min_merge_hg38.bam	Reference/Adj+1Nuc_TSS_all_250bp.bed			F3B;S7
 NaN	NaN	NaN	NaN	    ../data/BAM/NakedDNA_BNase-seq_0.04U_1_hg38.bam	Reference/Adj+1Nuc_TSS_all_250bp.bed			F3B;S7
