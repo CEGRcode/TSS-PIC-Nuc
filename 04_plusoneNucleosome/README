@@ -1,0 +1,17 @@
+# Nucleosome group annotations
+
+Each key used in the data files is matched to the group name used in the paper (Figures 3C and S7).
+
+| Key             | Group name in paper            |
+|-----------------|--------------------------------|
+| sameYR_lowWS    | Group1_syn_YR_inphase          |
+| lowYR_sameWS    | Group2_syn_SW_inphase          |
+| YRWS            | Group3_syn_SYWR_inphase        |
+| antiYR_antiWS   | Group4_syn_SYWR_outphase       |
+| antiYR_sameWS   | Group5_anti_SRWY_inphase       |
+| sameYR_antiWS   | Group6_anti_SRWY_outphase      |
+| lessDNAencode   | Group7_unencoded               |
+
+## Abbreviations
+- IUPAC codes: S = G/C, W = A/T, Y = C/T, R = A/G
+- YR, WS (SW): dinucleotide periodicity classes
